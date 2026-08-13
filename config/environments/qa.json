@@ -1,0 +1,19 @@
+{
+  "name": "qa",
+
+  "baseUrl": "https://opensource-demo.orangehrmlive.com/",
+
+  "apiUrl": "https://fakerestapi.azurewebsites.net/index.html",
+
+  "timeout": 30000,
+
+  "features": {
+    "memberSearch": true,
+    "adminPortal": true
+  },
+
+  "performance": {
+    "pageLoad": 5000,
+    "apiResponse": 2000
+  }
+}

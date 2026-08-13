@@ -1,0 +1,6 @@
+{
+  "name": "staging",
+  "baseUrl": "https://staging.example.com",
+  "apiUrl": "https://api-staging.example.com",
+  "timeout": 30000
+}

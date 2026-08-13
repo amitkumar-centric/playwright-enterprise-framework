@@ -1,0 +1,9 @@
+{
+  "name": "dev",
+  "baseUrl": "https://dev.example.com",
+  "apiUrl": "https://api-dev.example.com",
+  "timeout": 30000,
+  "featureFlags": {},
+  "testData": {},
+  "performanceThresholds": {}
+}
