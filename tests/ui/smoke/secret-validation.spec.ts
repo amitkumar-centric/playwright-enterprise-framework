@@ -2,20 +2,15 @@ import { test, expect } from '@playwright/test';
 
 import { secrets } from '../../../services/secrets';
 
-test.beforeEach(async () => {
-  const hasUsername =
-    await secrets.has('ADMIN_USERNAME');
-
-  const hasPassword =
-    await secrets.has('ADMIN_PASSWORD');
-
-  test.skip(
-    !hasUsername || !hasPassword,
-    'ADMIN_USERNAME and ADMIN_PASSWORD must be configured.'
-  );
-});
+const hasAdminCredentials =
+  Boolean(process.env.ADMIN_USERNAME) &&
+  Boolean(process.env.ADMIN_PASSWORD);
 
 test('verify secret provider configuration', async () => {
+  test.skip(
+    !hasAdminCredentials,
+    'ADMIN_USERNAME and ADMIN_PASSWORD must be configured.'
+  );
 
   const username =
     await secrets.get('ADMIN_USERNAME');
