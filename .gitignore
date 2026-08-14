@@ -1,28 +1,30 @@
 
-# Playwright
-node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
+# Dependencies
 node_modules/
 
+# Playwright artifacts
 playwright-report/
 test-results/
 blob-report/
+.features-gen/
+playwright/.cache/
+playwright/.auth/
 
+# Allure artifacts
 allure-results/
 allure-report/
 
+# Environment files
 .env
 .env.*
 !.env.example
 
+# Auth state
 auth/states/
-playwright/.auth/
 
+# Logs
 logs/
 
+# Generated data
 data/generated/*
 !data/generated/.gitkeep

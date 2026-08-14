@@ -7,6 +7,18 @@ import {
   secrets
 } from '../../../services/secrets';
 
+test.beforeEach(async () => {
+  const hasUsername =
+    await secrets.has('ADMIN_USERNAME');
+
+  const hasPassword =
+    await secrets.has('ADMIN_PASSWORD');
+
+  test.skip(
+    !hasUsername || !hasPassword,
+    'ADMIN_USERNAME and ADMIN_PASSWORD must be configured.'
+  );
+});
 
 test(
   'OrangeHRM admin can login',
