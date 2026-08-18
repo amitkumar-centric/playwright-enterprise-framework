@@ -4,6 +4,10 @@ import {
 } from '../../../fixtures/base.fixture';
 
 import {
+  config
+} from '../../../config/framework.config';
+
+import {
   UserFactory
 } from '../../../data/factories/UserFactory';
 
@@ -23,10 +27,37 @@ test(
     ]
   },
   async ({
+    page,
     loginPage,
     dashboardPage,
+    adminCredentials,
     userService
   }) => {
+
+    const isOrangeHrm =
+      new URL(
+        config.baseUrl
+      ).hostname.includes(
+        'orangehrmlive.com'
+      );
+
+    if (isOrangeHrm) {
+
+      await loginPage.gotoOrangeHrm();
+
+      await loginPage.loginToOrangeHrm(
+        adminCredentials.username,
+        adminCredentials.password
+      );
+
+      await expect(page)
+        .toHaveURL(
+          /orangehrmlive\.com\/web\/index\.php\/dashboard/
+        );
+
+      return;
+
+    }
 
     const user =
       UserFactory.create();

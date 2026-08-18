@@ -10,6 +10,16 @@ import {
 
 export class LoginPage {
 
+  private static buildOrangeHrmUrl(
+    path: string
+  ): string {
+
+    return new URL(
+      path,
+      config.baseUrl
+    ).toString();
+  }
+
   readonly page: Page;
 
   readonly usernameInput: Locator;
@@ -102,8 +112,13 @@ export class LoginPage {
   async gotoOrangeHrm():
     Promise<void> {
 
+    await this.page.context()
+      .clearCookies();
+
     await this.page.goto(
-      config.baseUrl
+      LoginPage.buildOrangeHrmUrl(
+        '/web/index.php/auth/login'
+      )
     );
 
     await this.orangeHrmUsernameInput

@@ -3,10 +3,34 @@ import { mkdir } from 'fs/promises';
 import { dirname } from 'path';
 
 import { LoginPage } from '../../pages/LoginPage';
+import { config } from '../../config/framework.config';
 import { getRoleCredentials } from '../../fixtures/role.fixture';
 import { roles } from '../../config/role.config';
 
 setup('authenticate admin', async ({ page }) => {
+  const storageStatePath =
+    roles.admin.storageStatePath;
+
+  await mkdir(
+    dirname(storageStatePath),
+    { recursive: true }
+  );
+
+  const isOrangeHrm =
+    new URL(
+      config.baseUrl
+    ).hostname.includes(
+      'orangehrmlive.com'
+    );
+
+  if (!isOrangeHrm) {
+    await page.context().storageState({
+      path: storageStatePath
+    });
+
+    return;
+  }
+
   const credentials =
     await getRoleCredentials('admin');
 
@@ -24,14 +48,6 @@ setup('authenticate admin', async ({ page }) => {
     .toHaveURL(
       /opensource-demo\.orangehrmlive\.com\/web\/index\.php\/dashboard/
     );
-
-  const storageStatePath =
-    roles.admin.storageStatePath;
-
-  await mkdir(
-    dirname(storageStatePath),
-    { recursive: true }
-  );
 
   await page.context().storageState({
     path: storageStatePath
