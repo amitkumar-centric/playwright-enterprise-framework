@@ -5,4 +5,6 @@ export interface EmployeeData {
   middleName?: string;
 
   lastName: string;
+
+  employeeId?: string;
 }

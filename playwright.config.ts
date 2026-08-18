@@ -15,6 +15,10 @@ import {
   reportingConfig
 } from './config/reporting.config';
 
+import {
+  roles
+} from './config/role.config';
+
 
 const isCI =
   Boolean(process.env.CI);
@@ -113,34 +117,97 @@ export default defineConfig({
 
   projects: [
 
+    // ---------------------------------
+    // Authentication setup
+    // ---------------------------------
+
     {
-      name: 'chromium',
+      name:
+        'admin-setup',
+
+      testMatch:
+        /.*auth\.setup\.ts/
+    },
+
+
+    // ---------------------------------
+    // Chromium
+    // ---------------------------------
+
+    {
+      name:
+        'chromium',
+
+      dependencies: [
+        'admin-setup'
+      ],
 
       use: {
+
         ...devices[
           'Desktop Chrome'
-        ]
+        ],
+
+        storageState:
+          roles.admin
+            .storageStatePath
+
       }
+
     },
 
+
+    // ---------------------------------
+    // Firefox
+    // ---------------------------------
+
     {
-      name: 'firefox',
+      name:
+        'firefox',
+
+      dependencies: [
+        'admin-setup'
+      ],
 
       use: {
+
         ...devices[
           'Desktop Firefox'
-        ]
+        ],
+
+        storageState:
+          roles.admin
+            .storageStatePath
+
       }
+
     },
 
+
+    // ---------------------------------
+    // WebKit
+    // ---------------------------------
+
     {
-      name: 'webkit',
+      name:
+        'webkit',
+
+      dependencies: [
+        'admin-setup'
+      ],
 
       use: {
+
         ...devices[
           'Desktop Safari'
-        ]
+        ],
+
+        storageState:
+          roles.admin
+            .storageStatePath
+
       }
+
     }
 
   ]

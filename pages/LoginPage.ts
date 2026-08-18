@@ -3,6 +3,10 @@ import {
   Locator
 } from '@playwright/test';
 
+import {
+  config
+} from '../config/framework.config';
+
 
 export class LoginPage {
 
@@ -13,6 +17,9 @@ export class LoginPage {
   readonly loginButton: Locator;
   readonly invalidCredentialsMessage: Locator;
   readonly loginHeading: Locator;
+  readonly orangeHrmUsernameInput: Locator;
+  readonly orangeHrmPasswordInput: Locator;
+  readonly orangeHrmLoginButton: Locator;
 
 
   constructor(page: Page) {
@@ -43,6 +50,24 @@ export class LoginPage {
       page.getByText(
         'Login to your account'
       );
+
+    this.orangeHrmUsernameInput =
+      page.getByPlaceholder(
+        'Username'
+      );
+
+    this.orangeHrmPasswordInput =
+      page.getByPlaceholder(
+        'Password'
+      );
+
+    this.orangeHrmLoginButton =
+      page.getByRole(
+        'button',
+        {
+          name: 'Login'
+        }
+      );
   }
 
 
@@ -71,6 +96,34 @@ export class LoginPage {
     );
 
     await this.loginButton.click();
+  }
+
+
+  async gotoOrangeHrm():
+    Promise<void> {
+
+    await this.page.goto(
+      config.baseUrl
+    );
+
+    await this.orangeHrmUsernameInput
+      .waitFor();
+  }
+
+
+  async loginToOrangeHrm(
+    username: string,
+    password: string
+  ): Promise<void> {
+
+    await this.orangeHrmUsernameInput
+      .fill(username);
+
+    await this.orangeHrmPasswordInput
+      .fill(password);
+
+    await this.orangeHrmLoginButton
+      .click();
   }
 
 }

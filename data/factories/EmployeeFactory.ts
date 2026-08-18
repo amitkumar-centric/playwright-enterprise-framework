@@ -4,6 +4,7 @@ export interface EmployeeData {
   firstName: string;
   middleName?: string;
   lastName: string;
+  employeeId: string;
 }
 
 export class EmployeeFactory {
@@ -28,6 +29,9 @@ export class EmployeeFactory {
 
       lastName:
         `${faker.person.lastName()}-${uniqueSuffix}`,
+
+      employeeId:
+        faker.string.numeric(6),
 
       ...overrides
 

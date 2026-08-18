@@ -53,6 +53,7 @@ import {
   attachDiagnostics
 } from './diagnostics.fixture';
 
+
 type FrameworkFixtures = {
 
   loginPage:
@@ -85,8 +86,8 @@ type FrameworkFixtures = {
   correlationId:
     string;
 
-    diagnostics:
-  void;
+  diagnostics:
+    void;
 
 };
 
@@ -95,47 +96,78 @@ export const test =
   base.extend<FrameworkFixtures>({
 
     loginPage:
-      async ({ page }, use) => {
+      async (
+        {
+          page
+        },
+        use
+      ) => {
 
         await use(
-          new LoginPage(page)
+          new LoginPage(
+            page
+          )
         );
 
       },
 
 
     dashboardPage:
-      async ({ page }, use) => {
+      async (
+        {
+          page
+        },
+        use
+      ) => {
 
         await use(
-          new DashboardPage(page)
+          new DashboardPage(
+            page
+          )
         );
 
       },
 
 
     pimPage:
-      async ({ page }, use) => {
+      async (
+        {
+          page
+        },
+        use
+      ) => {
 
         await use(
-          new PimPage(page)
+          new PimPage(
+            page
+          )
         );
 
       },
 
 
     productsPage:
-      async ({ page }, use) => {
+      async (
+        {
+          page
+        },
+        use
+      ) => {
 
         await use(
-          new ProductsPage(page)
+          new ProductsPage(
+            page
+          )
         );
 
       },
 
-      
+
     adminCredentials:
-      async ({}, use) => {
+      async (
+        {},
+        use
+      ) => {
 
         await use(
           await getAdminCredentials()
@@ -145,9 +177,12 @@ export const test =
 
 
     apiClient:
-      async ({
-        playwright
-      }, use) => {
+      async (
+        {
+          playwright
+        },
+        use
+      ) => {
 
         const apiContext =
           await playwright
@@ -174,15 +209,19 @@ export const test =
         );
 
 
-        await apiContext.dispose();
+        await apiContext
+          .dispose();
 
       },
 
 
     productService:
-      async ({
-        apiClient
-      }, use) => {
+      async (
+        {
+          apiClient
+        },
+        use
+      ) => {
 
         await use(
           new ProductService(
@@ -194,9 +233,12 @@ export const test =
 
 
     userService:
-      async ({
-        apiClient
-      }, use) => {
+      async (
+        {
+          apiClient
+        },
+        use
+      ) => {
 
         await use(
           new UserService(
@@ -208,19 +250,26 @@ export const test =
 
 
     correlationId:
-      async ({}, use) => {
+      async (
+        {},
+        use
+      ) => {
 
         await use(
-          IdHelper.createCorrelationId()
+          IdHelper
+            .createCorrelationId()
         );
 
       },
 
 
     logger:
-      async ({
-        correlationId
-      }, use) => {
+      async (
+        {
+          correlationId
+        },
+        use
+      ) => {
 
         await use(
           new Logger(
@@ -230,28 +279,33 @@ export const test =
 
       },
 
-  diagnostics:
-  async ({
-    page
-  }, use, testInfo) => {
 
-    const diagnostics =
-      await setupDiagnostics(
-        page,
+    diagnostics:
+      async (
+        {
+          page
+        },
+        use,
         testInfo
-      );
+      ) => {
+
+        const diagnostics =
+          await setupDiagnostics(
+            page,
+            testInfo
+          );
 
 
-    await use();
+        await use();
 
 
-    await attachDiagnostics(
-      page,
-      diagnostics,
-      testInfo
-    );
+        await attachDiagnostics(
+          page,
+          diagnostics,
+          testInfo
+        );
 
-  },
+      }
 
   });
 
