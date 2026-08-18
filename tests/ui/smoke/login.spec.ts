@@ -1,64 +1,95 @@
 import {
   test,
   expect
-} from '@playwright/test';
+} from '../../../fixtures/base.fixture';
 
 import {
-  secrets
-} from '../../../services/secrets';
+  config
+} from '../../../config/framework.config';
 
-test.beforeEach(async () => {
-  const hasUsername =
-    await secrets.has('ADMIN_USERNAME');
+import {
+  UserFactory
+} from '../../../data/factories/UserFactory';
 
-  const hasPassword =
-    await secrets.has('ADMIN_PASSWORD');
+import {
+  Tags
+} from '../../../config/tag.config';
 
-  test.skip(
-    !hasUsername || !hasPassword,
-    'ADMIN_USERNAME and ADMIN_PASSWORD must be configured.'
-  );
-});
 
 test(
-  'OrangeHRM admin can login',
-  async ({ page }) => {
+  'User can login with a newly created account',
+  {
+    tag: [
+      Tags.smoke,
+      Tags.critical,
+      Tags.ui,
+      Tags.nonProd
+    ]
+  },
+  async ({
+    page,
+    loginPage,
+    dashboardPage,
+    adminCredentials,
+    userService
+  }) => {
 
-    const username =
-      await secrets.get('ADMIN_USERNAME');
+    const isOrangeHrm =
+      new URL(
+        config.baseUrl
+      ).hostname.includes(
+        'orangehrmlive.com'
+      );
 
-    const password =
-      await secrets.get('ADMIN_PASSWORD');
+    if (isOrangeHrm) {
 
+      await loginPage.gotoOrangeHrm();
 
-    await page.goto(
-      '/web/index.php/auth/login'
-    );
+      await loginPage.loginToOrangeHrm(
+        adminCredentials.username,
+        adminCredentials.password
+      );
 
+      await expect(page)
+        .toHaveURL(
+          /orangehrmlive\.com\/web\/index\.php\/dashboard/
+        );
 
-    await page
-      .getByPlaceholder('Username')
-      .fill(username);
+      return;
 
+    }
 
-    await page
-      .getByPlaceholder('Password')
-      .fill(password);
+    const user =
+      UserFactory.create();
 
+    await userService
+      .createAccount(
+        user.email,
+        user.password,
+        user.name
+      );
 
-    await page
-      .getByRole('button', {
-        name: 'Login'
-      })
-      .click();
+    try {
 
+      await loginPage.goto();
 
-    await expect(
-      page
-        .getByRole('heading', {
-          name: 'Dashboard'
-        })
-    ).toBeVisible();
+      await loginPage.login(
+        user.email,
+        user.password
+      );
 
+      await expect(
+        dashboardPage.dashboardHeading
+      ).toBeVisible();
+
+    } finally {
+
+      await userService
+        .deleteAccount(
+          user.email,
+          user.password
+        );
+
+    }
   }
 );

@@ -21,6 +21,7 @@ allure-report/
 
 # Auth state
 auth/states/
+auth/states/*.json
 
 # Logs
 logs/
@@ -28,3 +29,7 @@ logs/
 # Generated data
 data/generated/*
 !data/generated/.gitkeep
+
+auth/states/*.json
+auth/states/
+playwright/.auth/

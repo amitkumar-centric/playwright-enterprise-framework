@@ -1,6 +1,18 @@
 {
-  "name": "staging",
-  "baseUrl": "https://staging.example.com",
-  "apiUrl": "https://api-staging.example.com",
-  "timeout": 30000
+  "name": "qa",
+
+  "baseUrl": "https://opensource-demo.orangehrmlive.com/",
+  "apiUrl": "https://automationexercise.com/api",
+
+  "timeout": 30000,
+
+  "features": {
+    "memberSearch": true,
+    "adminPortal": true
+  },
+
+  "performance": {
+    "pageLoad": 5000,
+    "apiResponse": 2000
+  }
 }

@@ -1,9 +1,8 @@
 {
   "name": "qa",
 
-  "baseUrl": "https://opensource-demo.orangehrmlive.com/",
-
-  "apiUrl": "https://fakerestapi.azurewebsites.net/index.html",
+  "baseUrl": "https://automationexercise.com",
+  "apiUrl": "https://automationexercise.com/api/",
 
   "timeout": 30000,
 

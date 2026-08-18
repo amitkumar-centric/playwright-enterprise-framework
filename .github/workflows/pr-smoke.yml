@@ -1,0 +1,180 @@
+name: PR Smoke Tests
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+
+  smoke:
+
+    name: Smoke Tests
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 30
+
+    env:
+      TEST_ENV: qa
+      SECRET_PROVIDER: env
+
+      ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+    steps:
+
+      # ---------------------------------------------------------
+      # 1. Checkout repository
+      # ---------------------------------------------------------
+      - name: Checkout
+        uses: actions/checkout@v6
+
+
+      # ---------------------------------------------------------
+      # 2. Setup Node.js
+      # ---------------------------------------------------------
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+
+      # ---------------------------------------------------------
+      # 3. Install project dependencies
+      # ---------------------------------------------------------
+      - name: Install dependencies
+        run: npm ci
+
+
+      # ---------------------------------------------------------
+      # 4. Install Playwright browsers and OS dependencies
+      # ---------------------------------------------------------
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+
+      # ---------------------------------------------------------
+      # 5. Validate TypeScript
+      # ---------------------------------------------------------
+      - name: TypeScript Validation
+        run: npx tsc --noEmit
+
+
+      # ---------------------------------------------------------
+      # 6. Run Playwright Smoke Tests
+      # ---------------------------------------------------------
+      - name: Run Smoke Tests
+        run: >
+          npm run test:framework --
+          --env=qa
+          --project=chromium
+          --grep "@smoke"
+          --grep-invert "@flaky"
+          --max-failures=1
+
+
+      # ---------------------------------------------------------
+      # 7. Check generated Playwright report
+      # ---------------------------------------------------------
+      - name: Check Playwright Report
+        if: always()
+        run: |
+          echo "Checking Playwright report..."
+          ls -la playwright-report || true
+
+
+      # ---------------------------------------------------------
+      # 8. Check Allure raw results
+      # ---------------------------------------------------------
+      - name: Check Allure Results
+        if: always()
+        run: |
+          echo "Checking Allure results..."
+          ls -la allure-results || true
+
+
+      # ---------------------------------------------------------
+      # 9. Remove previous Allure report
+      # ---------------------------------------------------------
+      - name: Clean Previous Allure Report
+        if: always()
+        run: rm -rf allure-report
+
+
+      # ---------------------------------------------------------
+      # 10. Generate Allure 3 Report
+      # ---------------------------------------------------------
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          if [ -d "allure-results" ] && [ "$(ls -A allure-results 2>/dev/null)" ]; then
+
+            echo "Allure results found."
+
+            npm run report:allure:generate
+
+          else
+
+            echo "No Allure results found."
+            echo "Skipping Allure report generation."
+
+          fi
+
+
+      # ---------------------------------------------------------
+      # 11. Upload Playwright HTML Report
+      # ---------------------------------------------------------
+      - name: Upload Playwright Report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pr-smoke-playwright-report
+          path: playwright-report/
+          retention-days: 14
+          if-no-files-found: warn
+
+
+      # ---------------------------------------------------------
+      # 12. Upload Allure Report
+      # ---------------------------------------------------------
+      - name: Upload Allure Report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pr-smoke-allure-report
+          path: allure-report/
+          retention-days: 14
+          if-no-files-found: warn
+
+
+      # ---------------------------------------------------------
+      # 13. Upload raw Allure Results
+      # ---------------------------------------------------------
+      - name: Upload Allure Results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pr-smoke-allure-results
+          path: allure-results/
+          retention-days: 14
+          if-no-files-found: warn
+
+
+      # ---------------------------------------------------------
+      # 14. Upload Playwright Test Artifacts
+      # screenshots / videos / traces
+      # ---------------------------------------------------------
+      - name: Upload Test Artifacts
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: pr-smoke-test-results
+          path: test-results/
+          retention-days: 14
+          if-no-files-found: warn

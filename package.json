@@ -7,6 +7,12 @@
     "test": "playwright test",
     "test:bdd": "node scripts/run-tests.js --mode=bdd",
     "test:all": "node scripts/run-tests.js",
+
+    "report:playwright": "playwright show-report",
+
+   "report:allure:generate": "allure generate --output allure-report",
+    "report:allure:open": "allure open allure-report",
+    "report:allure": "npm run report:allure:generate && npm run report:allure:open",
     "show-report:framework": "npx playwright show-report playwright-report/framework",
     "show-report:bdd": "npx playwright show-report playwright-report/bdd"
   },
@@ -15,8 +21,12 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
     "@playwright/test": "^1.62.1",
     "@types/node": "^26.2.0",
+    "allure": "^3.15.0",
+    "allure-playwright": "^3.10.2",
+    "csv-parse": "^7.0.2",
     "playwright-bdd": "^9.2.0",
     "ts-node": "^10.9.2"
   },

@@ -1,0 +1,50 @@
+name: Flaky Test Monitor
+
+on:
+  schedule:
+    - cron: '0 20 * * *'
+
+  workflow_dispatch:
+
+jobs:
+
+  flaky:
+
+    runs-on: ubuntu-latest
+
+    env:
+      TEST_ENV: qa
+      SECRET_PROVIDER: env
+
+      ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+
+    steps:
+
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - run: npx playwright install --with-deps
+
+      - name: Run flaky tests
+        run: >
+          npm run test:framework --
+          --env=qa
+          --project=chromium
+          --grep "@flaky"
+
+      - name: Upload flaky report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: flaky-test-report
+          path: |
+            playwright-report/
+            allure-results/
+            test-results/

@@ -13,11 +13,13 @@
     "playwright-bdd.config.ts",
     "playwright.config.ts",
     "config/**/*.ts",
+    "data/**/*.ts",
     "features/**/*.ts",
     "fixtures/**/*.ts",
     "pages/**/*.ts",
     "scripts/**/*.ts",
     "services/**/*.ts",
-    "tests/**/*.ts"
+    "tests/**/*.ts",
+    "utils/**/*.ts"
   ]
 }
