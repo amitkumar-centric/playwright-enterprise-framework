@@ -16,11 +16,8 @@ export class DashboardPage {
     this.page = page;
 
     this.dashboardHeading =
-      page.getByRole(
-        'heading',
-        {
-          name: 'Dashboard'
-        }
+      page.getByText(
+        /Logged in as/i
       );
   }
 

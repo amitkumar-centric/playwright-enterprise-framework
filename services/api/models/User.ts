@@ -7,3 +7,13 @@ export interface VerifyLoginResponse {
     string;
 
 }
+
+export interface AccountMutationResponse {
+
+  responseCode:
+    number;
+
+  message:
+    string;
+
+}

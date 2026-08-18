@@ -104,6 +104,7 @@ export class ApiClient {
 
   async delete<T>(
     path: string,
+    data?: unknown,
     headers:
       Record<string, string> = {}
   ): Promise<ApiResponse<T>> {
@@ -116,6 +117,7 @@ export class ApiClient {
       await this.request.delete(
         path,
         {
+          data,
           headers
         }
       );

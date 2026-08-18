@@ -12,6 +12,7 @@ export class LoginPage {
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
   readonly invalidCredentialsMessage: Locator;
+  readonly loginHeading: Locator;
 
 
   constructor(page: Page) {
@@ -19,19 +20,28 @@ export class LoginPage {
     this.page = page;
 
     this.usernameInput =
-      page.getByPlaceholder('Username');
+      page.locator(
+        'input[data-qa="login-email"]'
+      );
 
     this.passwordInput =
-      page.getByPlaceholder('Password');
+      page.locator(
+        'input[data-qa="login-password"]'
+      );
 
     this.loginButton =
-      page.getByRole('button', {
-        name: 'Login'
-      });
+      page.locator(
+        'button[data-qa="login-button"]'
+      );
 
     this.invalidCredentialsMessage =
       page.getByText(
-        'Invalid credentials'
+        'Your email or password is incorrect!'
+      );
+
+    this.loginHeading =
+      page.getByText(
+        'Login to your account'
       );
   }
 
@@ -39,8 +49,11 @@ export class LoginPage {
   async goto(): Promise<void> {
 
     await this.page.goto(
-      '/web/index.php/auth/login'
+      '/login'
     );
+
+    await this.loginHeading
+      .waitFor();
   }
 
 

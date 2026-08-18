@@ -4,35 +4,61 @@ import {
 } from '../../../fixtures/base.fixture';
 
 import {
+  UserFactory
+} from '../../../data/factories/UserFactory';
+
+import {
   Tags
 } from '../../../config/tag.config';
 
 
 test(
-  'OrangeHRM admin can login',
+  'User can login with a newly created account',
   {
     tag: [
       Tags.smoke,
       Tags.critical,
       Tags.ui,
-      Tags.prodSafe
+      Tags.nonProd
     ]
   },
   async ({
     loginPage,
     dashboardPage,
-    adminCredentials
+    userService
   }) => {
 
-    await loginPage.goto();
+    const user =
+      UserFactory.create();
 
-    await loginPage.login(
-      adminCredentials.username,
-      adminCredentials.password
-    );
+    await userService
+      .createAccount(
+        user.email,
+        user.password,
+        user.name
+      );
 
-    await expect(
-      dashboardPage.dashboardHeading
-    ).toBeVisible();
+    try {
+
+      await loginPage.goto();
+
+      await loginPage.login(
+        user.email,
+        user.password
+      );
+
+      await expect(
+        dashboardPage.dashboardHeading
+      ).toBeVisible();
+
+    } finally {
+
+      await userService
+        .deleteAccount(
+          user.email,
+          user.password
+        );
+
+    }
   }
 );
