@@ -7,43 +7,109 @@ import {
   config
 } from './config/framework.config';
 
+import {
+  executionConfig
+} from './config/execution.config';
 
-console.log(
-  `Running tests against: ${config.environment.toUpperCase()}`
-);
+import {
+  reportingConfig
+} from './config/reporting.config';
+
+
+const isCI =
+  Boolean(process.env.CI);
+
+
+const execution =
+  isCI
+    ? executionConfig.ci
+    : executionConfig.local;
 
 
 export default defineConfig({
 
-  testDir: './tests',
-  outputDir: 'test-results/framework',
+  testDir:
+    './tests',
+
+  fullyParallel:
+    true,
+
+  workers:
+    execution.workers,
+
+  retries:
+    execution.retries,
+
+  maxFailures:
+    execution.maxFailures,
+
 
   reporter: [
-    ['list'],
-    ['html', {
-      outputFolder: 'playwright-report/framework',
-      open: 'never'
-    }]
+
+    [
+      isCI
+        ? 'dot'
+        : 'list'
+    ],
+
+    [
+      'html',
+      {
+
+        outputFolder:
+          reportingConfig
+            .playwrightHtml
+            .outputFolder,
+
+        open:
+          'never'
+
+      }
+    ],
+
+    [
+      'allure-playwright',
+      {
+
+        resultsDir:
+          reportingConfig
+            .allure
+            .resultsDir
+
+      }
+    ],
+
+    [
+      'junit',
+      {
+
+        outputFile:
+          reportingConfig
+            .junit
+            .outputFile
+
+      }
+    ]
+
   ],
+
 
   use: {
 
     baseURL:
       config.baseUrl,
 
-    headless:
-      config.browser.headless,
+    screenshot:
+      'only-on-failure',
+
+    video:
+      'retain-on-failure',
 
     trace:
-      'on-first-retry',
-
-    actionTimeout:
-      config.browser.actionTimeout,
-
-    navigationTimeout:
-      config.browser.navigationTimeout
+      'on-first-retry'
 
   },
+
 
   projects: [
 
@@ -51,7 +117,9 @@ export default defineConfig({
       name: 'chromium',
 
       use: {
-        ...devices['Desktop Chrome']
+        ...devices[
+          'Desktop Chrome'
+        ]
       }
     },
 
@@ -59,7 +127,9 @@ export default defineConfig({
       name: 'firefox',
 
       use: {
-        ...devices['Desktop Firefox']
+        ...devices[
+          'Desktop Firefox'
+        ]
       }
     },
 
@@ -67,7 +137,9 @@ export default defineConfig({
       name: 'webkit',
 
       use: {
-        ...devices['Desktop Safari']
+        ...devices[
+          'Desktop Safari'
+        ]
       }
     }
 
