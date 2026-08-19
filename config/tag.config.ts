@@ -21,6 +21,11 @@ export const Tags = {
 
   // Security / performance
   security: '@security',
-  performance: '@performance'
+  performance: '@performance',
+
+  cloud: '@cloud',
+  crossBrowser: '@cross-browser',
+  mobile: '@mobile'
+
 
 } as const;

@@ -1,0 +1,35 @@
+userName: ${BROWSERSTACK_USERNAME}
+accessKey: ${BROWSERSTACK_ACCESS_KEY}
+
+framework: playwright
+
+platforms:
+
+  - os: Windows
+    osVersion: 11
+    browserName: chrome
+    browserVersion: latest
+
+  - os: Windows
+    osVersion: 11
+    browserName: edge
+    browserVersion: latest
+
+  - os: OS X
+    osVersion: Sonoma
+    browserName: safari
+    browserVersion: latest
+
+parallelsPerPlatform: 1
+
+projectName: Playwright Enterprise Framework
+
+buildName: Cross Browser POC
+
+browserstackLocal: false
+
+debug: true
+
+networkLogs: true
+
+consoleLogs: info

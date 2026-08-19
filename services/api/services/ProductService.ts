@@ -3,12 +3,23 @@ import {
 } from '../ApiClient';
 
 import {
+  ApiResponse
+} from '../ApiResponse';
+
+import {
   Product,
   ProductListResponse
 } from '../models/Product';
 
 
 export class ProductService {
+
+  private static readonly transientStatuses = [
+    502,
+    503,
+    504,
+    525
+  ] as const;
 
   constructor(
     private readonly api:
@@ -20,16 +31,15 @@ export class ProductService {
     Promise<Product[]> {
 
     const response =
-      await this.api
-        .get<ProductListResponse>(
-          'productsList'
-        );
+      await this.getProductsListResponse();
 
 
     if (!response.ok) {
 
       throw new Error(
-        `Unable to retrieve products. HTTP status: ${response.status}`
+        `Product API request failed while retrieving the product catalogue. `
+        + `Endpoint: productsList. HTTP status: ${response.status}. `
+        + `This usually means the API is temporarily unavailable or rejected the request.`
       );
 
     }
@@ -38,7 +48,7 @@ export class ProductService {
     if (!response.data) {
 
       throw new Error(
-        'Product API returned no response body.'
+        'Product API returned an empty or unreadable response body for productsList.'
       );
 
     }
@@ -49,13 +59,53 @@ export class ProductService {
     ) {
 
       throw new Error(
-        `Product API returned responseCode ${response.data.responseCode}`
+        `Product API returned an unexpected business response code `
+        + `${response.data.responseCode} for productsList.`
       );
 
     }
 
 
     return response.data.products;
+  }
+
+
+  private async getProductsListResponse():
+    Promise<ApiResponse<ProductListResponse>> {
+
+    let lastResponse:
+      ApiResponse<ProductListResponse> | undefined;
+
+    for (let attempt = 1; attempt <= 3; attempt++) {
+
+      const response =
+        await this.api
+          .get<ProductListResponse>(
+            'productsList'
+          );
+
+      lastResponse = response;
+
+      if (
+        response.ok
+        ||
+        !ProductService.transientStatuses.includes(
+          response.status as typeof ProductService.transientStatuses[number]
+        )
+      ) {
+        return response;
+      }
+
+      await new Promise(
+        resolve =>
+          setTimeout(
+            resolve,
+            attempt * 1000
+          )
+      );
+    }
+
+    return lastResponse!;
   }
 
 
@@ -76,7 +126,7 @@ export class ProductService {
     if (!product) {
 
       throw new Error(
-        `Product with id ${id} was not found.`
+        `Product with id ${id} was not found in the API product catalogue.`
       );
 
     }
@@ -98,7 +148,7 @@ export class ProductService {
     ) {
 
       throw new Error(
-        'No products returned from API.'
+        'The product API returned zero products, so UI comparison could not continue.'
       );
 
     }

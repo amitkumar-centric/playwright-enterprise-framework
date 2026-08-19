@@ -49,6 +49,9 @@ export class PimPage {
   readonly personalDetailsHeading:
     Locator;
 
+  readonly formLoader:
+    Locator;
+
 
   constructor(
     private readonly page:
@@ -102,6 +105,21 @@ export class PimPage {
           name: 'Personal Details'
         }
       );
+
+    this.formLoader =
+      page.locator(
+        '.oxd-form-loader'
+      );
+  }
+
+
+  private async waitForLoaderToSettle():
+    Promise<void> {
+
+    await this.formLoader
+      .waitFor({
+        state: 'hidden'
+      });
   }
 
 
@@ -125,6 +143,8 @@ export class PimPage {
 
     await this.addEmployeeMenu
       .waitFor();
+
+    await this.waitForLoaderToSettle();
   }
 
 
@@ -133,14 +153,15 @@ export class PimPage {
 
     try {
 
-      await this.page.goto(
-        PimPage.buildOrangeHrmUrl(
-          '/web/index.php/pim/addEmployee'
-        )
-      );
+      await this.gotoOrangeHrmEmployeeList();
+
+      await this.addEmployeeMenu
+        .click();
 
       await this.firstNameInput
         .waitFor();
+
+      await this.waitForLoaderToSettle();
 
     } catch (error) {
 
@@ -191,12 +212,22 @@ export class PimPage {
           ?? faker.string.numeric(6)
         );
 
-      await this
-        .saveButton
-        .click();
+      await this.waitForLoaderToSettle();
 
-      await this.personalDetailsHeading
-        .waitFor();
+      await Promise.all([
+        this.page.waitForURL(
+          /\/web\/index\.php\/pim\/viewPersonalDetails\/empNumber\/\d+/,
+          {
+            waitUntil: 'domcontentloaded',
+            timeout: 60_000
+          }
+        ),
+        this.saveButton.click({
+          force: true
+        })
+      ]);
+
+      await this.waitForLoaderToSettle();
 
     } catch (error) {
 

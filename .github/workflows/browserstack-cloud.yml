@@ -1,0 +1,85 @@
+name: BrowserStack Cloud Tests
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+
+  workflow_dispatch:
+
+jobs:
+
+  browserstack:
+
+    name: Playwright BrowserStack
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: 45
+
+    env:
+
+      TEST_ENV: qa
+
+      BROWSERSTACK_USERNAME:
+        ${{ secrets.BROWSERSTACK_USERNAME }}
+
+      BROWSERSTACK_ACCESS_KEY:
+        ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v6
+
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+
+          node-version: 20
+
+          cache: npm
+
+
+      - name: Install dependencies
+        run: npm ci
+
+
+      - name: TypeScript validation
+        run: npx tsc --noEmit
+
+
+      - name: Run BrowserStack Cloud Tests
+        run: npm run test:cloud
+
+
+      - name: Upload Playwright Report
+        if: always()
+
+        uses: actions/upload-artifact@v7
+
+        with:
+
+          name: browserstack-playwright-report
+
+          path: playwright-report/cloud/
+
+          retention-days: 14
+
+
+      - name: Upload Test Results
+        if: always()
+
+        uses: actions/upload-artifact@v7
+
+        with:
+
+          name: browserstack-test-results
+
+          path: test-results/
+
+          retention-days: 14

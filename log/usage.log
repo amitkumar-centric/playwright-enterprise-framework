@@ -1,0 +1,62 @@
+2026-08-19 17:18:37 - [32minfo[39m: Reading configs from C:\Users\amit.kumar2\playwright-enterprise-framework\browserstack.yml
+2026-08-19 17:19:07 - [32minfo[39m: stop: stopBinSession build_link=null hashed_id=null o11y_uuid=hglz2gautb8ybr4bbkqhwh9kzmfwvnxnlo44w6pd
+2026-08-19 17:19:12 - [32minfo[39m: Visit https://automation.browserstack.com/builds/hglz2gautb8ybr4bbkqhwh9kzmfwvnxnlo44w6pd to view build report, insights, and many more debugging information all at one place!
+
+2026-08-19 17:24:23 - [32minfo[39m: Reading configs from C:\Users\amit.kumar2\playwright-enterprise-framework\browserstack.yml
+2026-08-19 17:24:53 - [32minfo[39m: stop: stopBinSession build_link=null hashed_id=null o11y_uuid=fn8y983cb2aihomtbn6wse1kogbyrep46vlmvpe0
+2026-08-19 17:24:58 - [32minfo[39m: Visit https://automation.browserstack.com/builds/fn8y983cb2aihomtbn6wse1kogbyrep46vlmvpe0 to view build report, insights, and many more debugging information all at one place!
+
+2026-08-19 17:28:15 - [32minfo[39m: Reading configs from C:\Users\amit.kumar2\playwright-enterprise-framework\browserstack.yml
+2026-08-19 17:28:42 - [32minfo[39m: stop: stopBinSession build_link=null hashed_id=null o11y_uuid=xrpi4b2c0r0xzfdmhjgbcgx9wkev8tmcc0rn4zlu
+2026-08-19 17:28:47 - [32minfo[39m: Visit https://automation.browserstack.com/builds/xrpi4b2c0r0xzfdmhjgbcgx9wkev8tmcc0rn4zlu to view build report, insights, and many more debugging information all at one place!
+
+2026-08-19 17:33:15 - [32minfo[39m: Reading configs from C:\Users\amit.kumar2\playwright-enterprise-framework\browserstack.yml
+2026-08-19 17:33:48 - [32minfo[39m: stop: stopBinSession build_link=null hashed_id=null o11y_uuid=is7tgtxkr1ksfhhegkahdk4k2ofcq7n762vfxk72
+2026-08-19 17:33:53 - [32minfo[39m: Visit https://automation.browserstack.com/builds/is7tgtxkr1ksfhhegkahdk4k2ofcq7n762vfxk72 to view build report, insights, and many more debugging information all at one place!
+
+2026-08-19 17:38:40 - [32minfo[39m: Reading configs from C:\Users\amit.kumar2\playwright-enterprise-framework\browserstack.yml
+2026-08-19 17:38:40 - [32minfo[39m: Log Directory has been set to C:\Users\amit.kumar2\playwright-enterprise-framework\log
+2026-08-19 17:38:40 - [32minfo[39m: Running SDK with args C:\Program Files\nodejs\node.exe C:\Users\amit.kumar2\playwright-enterprise-framework\node_modules\browserstack-node-sdk\src\bin\runner.js playwright test --config=playwright.cloud.config.ts
+2026-08-19 17:38:40 - [32minfo[39m: SDK run started with id: dee7f11a-bdc3-4850-b686-39562b7b2232
+2026-08-19 17:38:40 - [32minfo[39m: Project and debug logs are captured by default. To disable, set disableAutoCaptureLogs: true in config.
+2026-08-19 17:38:41 - [32minfo[39m: [BrowserstackCLI] startMain: Starting main process
+2026-08-19 17:38:41 - [32minfo[39m: [CLIUtils] Current CLI Path Found: C:\Users\amit.kumar2\.browserstack\cli\binary-win-x64.exe
+2026-08-19 17:38:43 - [32minfo[39m: [BrowserstackCLI] spawning command='C:\Users\amit.kumar2\.browserstack\cli\binary-win-x64.exe,sdk'
+2026-08-19 17:38:44 - [32minfo[39m: [BrowserstackCLI] CLI params loaded: {"id":"8762cbb4-bff0-4ae7-879a-b786e85042a5","listen":"127.0.0.1:5400","port":"5400"}
+2026-08-19 17:38:44 - [32minfo[39m: [GrpcClient] Connected to gRPC server at 127.0.0.1:5400
+2026-08-19 17:38:44 - [32minfo[39m: [GrpcClient] Initialized gRPC client with bin session id: 8762cbb4-bff0-4ae7-879a-b786e85042a5 and listen address: 127.0.0.1:5400
+2026-08-19 17:38:44 - [32minfo[39m: [GrpcClient] startBinSession: Calling startBinSession
+2026-08-19 17:38:44 - [32minfo[39m: [GrpcClient] setCliArgs: cliArgs=["playwright","test","--config=playwright.cloud.config.ts"], parsedConfig=[]
+2026-08-19 17:38:46 - [32minfo[39m: [GrpcClient] StartBinSession successful
+2026-08-19 17:38:46 - [32minfo[39m: [BrowserstackCLI] loadModules: Loading modules
+2026-08-19 17:38:46 - [32minfo[39m: [BrowserstackCLI] loadModules: binSessionId=8762cbb4-bff0-4ae7-879a-b786e85042a5
+2026-08-19 17:38:46 - [32minfo[39m: [BrowserstackCLI] loading Modules.
+2026-08-19 17:38:46 - [32minfo[39m: [BrowserstackCLI] setCliArgs: cliArgs=["playwright","test","--config=playwright.cloud.config.ts"]
+2026-08-19 17:38:46 - [32minfo[39m: [BrowserstackCLI] Accessibility success=false
+2026-08-19 17:38:55 - [32minfo[39m: [BrowserstackCLI] Starting as child process with session ID: 8762cbb4-bff0-4ae7-879a-b786e85042a5
+2026-08-19 17:38:56 - [32minfo[39m: [GrpcClient] Connected to gRPC server at 127.0.0.1:5400
+2026-08-19 17:38:56 - [32minfo[39m: [GrpcClient] Connecting bin session
+2026-08-19 17:38:56 - [32minfo[39m: [GrpcClient] ConnectBinSession successful
+2026-08-19 17:38:56 - [32minfo[39m: [BrowserstackCLI] loadModules: Loading modules
+2026-08-19 17:38:56 - [32minfo[39m: [BrowserstackCLI] loadModules: binSessionId=8762cbb4-bff0-4ae7-879a-b786e85042a5
+2026-08-19 17:38:56 - [32minfo[39m: [BrowserstackCLI] loading Modules.
+2026-08-19 17:38:56 - [32minfo[39m: [BrowserstackCLI] Accessibility success=false
+2026-08-19 17:38:56 - [32minfo[39m: [GrpcClient] Getting Playwright config
+2026-08-19 17:38:56 - [32minfo[39m: [GrpcClient] PlaywrightConfig request successful
+2026-08-19 17:38:56 - [32minfo[39m: Setting up TestInfo directory at C:\Users\amit.kumar2\playwright-enterprise-framework\log\.obs_test_details-6kaetbur969fipgb7xewfdcuiahxsknbnd5iaviu
+2026-08-19 17:38:56 - [32minfo[39m: [PlaywrightTestFramework] trackPlaywrightInstance: created instance for target=26752:0, state=TestFrameworkState.INIT_TEST
+2026-08-19 17:38:56 - [32minfo[39m: [PlaywrightTestFramework] trackPlaywrightInstance: saved instance contextId=a5ccca2ed01c2617666434500d4bb061f9024b28d0ef68b2565172170fce371b target=26752:0
+2026-08-19 17:38:56 - [32minfo[39m: [BrowserstackCLI] stop: CLI stop triggered
+2026-08-19 17:38:56 - [32minfo[39m: [GrpcClient] Stopping bin session
+2026-08-19 17:38:58 - [32minfo[39m: [GrpcClient] StopBinSession successful
+2026-08-19 17:38:58 - [32minfo[39m: stop: stopBinSession build_link=null hashed_id=null o11y_uuid=6kaetbur969fipgb7xewfdcuiahxsknbnd5iaviu
+2026-08-19 17:38:58 - [32minfo[39m: [BrowserstackCLI] Unconfiguring modules
+2026-08-19 17:38:58 - [32minfo[39m: [BrowserstackCLI] stop: channel closed
+2026-08-19 17:39:03 - [32minfo[39m: [BrowserstackCLI] stop: shutting down CLI
+2026-08-19 17:39:03 - [32minfo[39m: [BrowserstackCLI] stop: CLI process exited
+2026-08-19 17:39:03 - [32minfo[39m: Visit https://automation.browserstack.com/builds/6kaetbur969fipgb7xewfdcuiahxsknbnd5iaviu to view build report, insights, and many more debugging information all at one place!
+
+2026-08-19 17:39:03 - [31merror[39m: [BrowserstackCLI] CLI process exited with code null after ready — gRPC calls will fail
+2026-08-19 17:39:05 - [32minfo[39m: SDK run ended for id: dee7f11a-bdc3-4850-b686-39562b7b2232, testhub id: 6kaetbur969fipgb7xewfdcuiahxsknbnd5iaviu
+2026-08-19 17:39:07 - [32minfo[39m: Deleting C:\Users\amit.kumar2\playwright-enterprise-framework\playwright-browserstack-sdk.config.ts
+2026-08-19 17:39:07 - [32minfo[39m: [BrowserstackCLI] stop: CLI is not running, skipping stop

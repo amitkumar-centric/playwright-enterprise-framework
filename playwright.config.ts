@@ -23,6 +23,12 @@ import {
 const isCI =
   Boolean(process.env.CI);
 
+const isOrangeHrmEnvironment =
+  new URL(
+    config.baseUrl
+  ).hostname.includes(
+    'orangehrmlive.com'
+  );
 
 const execution =
   isCI
@@ -32,14 +38,22 @@ const execution =
 
 export default defineConfig({
 
+  timeout:
+    config.timeout,
+
   testDir:
     './tests',
 
   fullyParallel:
-    true,
+    !isOrangeHrmEnvironment,
 
   workers:
-    execution.workers,
+    execution.workers
+    ?? (
+      isOrangeHrmEnvironment
+        ? 1
+        : undefined
+    ),
 
   retries:
     execution.retries,
@@ -102,6 +116,14 @@ export default defineConfig({
 
     baseURL:
       config.baseUrl,
+
+    actionTimeout:
+      config.browser
+        .actionTimeout,
+
+    navigationTimeout:
+      config.browser
+        .navigationTimeout,
 
     screenshot:
       'only-on-failure',
@@ -169,11 +191,34 @@ export default defineConfig({
         'admin-setup'
       ],
 
+      timeout:
+        60_000,
+
       use: {
 
         ...devices[
           'Desktop Firefox'
         ],
+
+        launchOptions: {
+
+          timeout:
+            60_000,
+
+          env: {
+            ...process.env,
+            MOZ_WEBRENDER: '0',
+            MOZ_ACCELERATED: '0'
+          },
+
+          firefoxUserPrefs: {
+            'gfx.webrender.all': false,
+            'gfx.webrender.enabled': false,
+            'layers.acceleration.disabled': true,
+            'gfx.canvas.accelerated': false
+          }
+
+        },
 
         storageState:
           roles.admin
