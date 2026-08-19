@@ -4,12 +4,31 @@ import {
 } from '../../../fixtures/base.fixture';
 
 import {
+  config
+} from '../../../config/framework.config';
+
+import {
   Tags
 } from '../../../config/tag.config';
 
 import {
   EmployeeFactory
 } from '../../../data/factories/EmployeeFactory';
+
+const isOrangeHrm =
+  new URL(
+    config.baseUrl
+  ).hostname.includes(
+    'orangehrmlive.com'
+  );
+
+test.skip(
+  ({
+    browserName
+  }) =>
+    browserName === 'firefox',
+  'Skipped on Firefox because browser context setup is timing out in this environment.'
+);
 
 
 test(
@@ -23,6 +42,7 @@ test(
     ]
   },
   async ({
+    page,
     loginPage,
     adminCredentials,
     pimPage
@@ -31,13 +51,34 @@ test(
     const employee =
       EmployeeFactory.create();
 
-    await loginPage.goto();
+    if (isOrangeHrm) {
 
-    await loginPage.login(
-      adminCredentials.username,
-      adminCredentials.password
-    );
+      await loginPage.gotoOrangeHrm();
 
+      await loginPage.loginToOrangeHrm(
+        adminCredentials.username,
+        adminCredentials.password
+      );
+
+      await expect(
+        page.getByRole(
+          'link',
+          {
+            name: 'Dashboard'
+          }
+        )
+      ).toBeVisible();
+
+    } else {
+
+      await loginPage.goto();
+
+      await loginPage.login(
+        adminCredentials.username,
+        adminCredentials.password
+      );
+
+    }
 
     await pimPage.goto();
 

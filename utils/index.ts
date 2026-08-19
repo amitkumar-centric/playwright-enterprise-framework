@@ -50,6 +50,14 @@ export type {
   SecurityHeaderResult
 } from './security/SecurityHeadersHelper';
 
+export {
+  PerformanceHelper
+} from './performance/PerformanceHelper';
+
+export type {
+  PagePerformance
+} from './performance/PerformanceHelper';
+
 
 export {
   CookieSecurityHelper
@@ -58,3 +66,7 @@ export {
 export type {
   CookieSecurityIssue
 } from './security/CookieSecurityHelper';
+
+export {
+  WaitHelper
+} from './common/WaitHelper';

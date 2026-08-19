@@ -3,18 +3,22 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "clean:reports": "node -e \"const fs=require('fs'); ['allure-results','allure-report','playwright-report','test-results'].forEach((path)=>fs.rmSync(path,{recursive:true,force:true}));\"",
+    "clean:allure-report": "node -e \"const fs=require('fs'); fs.rmSync('allure-report',{recursive:true,force:true});\"",
+    "test": "npx playwright test",
     "test:framework": "node scripts/run-tests.js",
-    "test": "playwright test",
+    "test:framework:fresh": "npm run clean:reports && node scripts/run-tests.js",
     "test:bdd": "node scripts/run-tests.js --mode=bdd",
+    "test:bdd:fresh": "npm run clean:reports && node scripts/run-tests.js --mode=bdd",
+    "test:fresh": "npm run clean:reports && npx playwright test",
     "test:all": "node scripts/run-tests.js",
-
-    "report:playwright": "playwright show-report",
-
-   "report:allure:generate": "allure generate --output allure-report",
-    "report:allure:open": "allure open allure-report",
+    "report:playwright": "npx playwright show-report",
+    "report:allure:generate": "npm run clean:allure-report && npx allure generate --output allure-report",
+    "report:allure:open": "npx allure open allure-report",
     "report:allure": "npm run report:allure:generate && npm run report:allure:open",
     "show-report:framework": "npx playwright show-report playwright-report/framework",
-    "show-report:bdd": "npx playwright show-report playwright-report/bdd"
+    "show-report:bdd": "npx playwright show-report playwright-report/bdd",
+    "test:cloud": "browserstack-node-sdk playwright test --config=playwright.cloud.config.ts"
   },
   "keywords": [],
   "author": "",
@@ -26,6 +30,7 @@
     "@types/node": "^26.2.0",
     "allure": "^3.15.0",
     "allure-playwright": "^3.10.2",
+    "browserstack-node-sdk": "^1.66.1",
     "csv-parse": "^7.0.2",
     "playwright-bdd": "^9.2.0",
     "ts-node": "^10.9.2"

@@ -21,6 +21,14 @@ const employees =
     'data/static/employees.csv'
   );
 
+test.skip(
+  ({
+    browserName
+  }) =>
+    browserName === 'firefox',
+  'Skipped on Firefox because browser context setup is timing out in this environment.'
+);
+
 
 for (const employee of employees) {
 

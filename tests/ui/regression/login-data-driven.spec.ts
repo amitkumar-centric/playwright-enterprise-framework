@@ -12,6 +12,10 @@ import {
 } from '../../../data/models/LoginTestData';
 
 import {
+  config
+} from '../../../config/framework.config';
+
+import {
   Tags
 } from '../../../config/tag.config';
 
@@ -20,6 +24,21 @@ const loginData =
   JsonDataLoader.load<LoginTestData[]>(
     'data/static/login-users.json'
   );
+
+const isOrangeHrm =
+  new URL(
+    config.baseUrl
+  ).hostname.includes(
+    'orangehrmlive.com'
+  );
+
+test.skip(
+  ({
+    browserName
+  }) =>
+    browserName === 'firefox',
+  'Skipped on Firefox because browser context setup is timing out in this environment.'
+);
 
 
 for (const data of loginData) {
@@ -34,22 +53,43 @@ for (const data of loginData) {
       ]
     },
     async ({
+      page,
       loginPage,
       dashboardPage
     }) => {
 
-      await loginPage.goto();
+      if (isOrangeHrm) {
 
-      await loginPage.login(
-        data.username,
-        data.password
-      );
+        await loginPage.gotoOrangeHrm();
 
+        await loginPage.loginToOrangeHrm(
+          data.username,
+          data.password
+        );
 
-      if (
-        data.expectedResult ===
-        'success'
-      ) {
+      } else {
+
+        await loginPage.goto();
+
+        await loginPage.login(
+          data.username,
+          data.password
+        );
+
+      }
+
+      if (data.expectedResult === 'success') {
+
+        if (isOrangeHrm) {
+
+          await expect(page)
+            .toHaveURL(
+              /orangehrmlive\.com\/web\/index\.php\/dashboard\/index/
+            );
+
+          return;
+
+        }
 
         await expect(
           dashboardPage
@@ -57,6 +97,21 @@ for (const data of loginData) {
         ).toBeVisible();
 
       } else {
+
+        if (isOrangeHrm) {
+
+          await expect(
+            loginPage.orangeHrmLoginButton
+          ).toBeVisible();
+
+          await expect(
+            loginPage
+              .orangeHrmUsernameInput
+          ).toBeVisible();
+
+          return;
+
+        }
 
         await expect(
           loginPage

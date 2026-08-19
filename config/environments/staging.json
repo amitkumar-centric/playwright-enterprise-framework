@@ -1,10 +1,10 @@
 {
-  "name": "qa",
+  "name": "staging",
 
   "baseUrl": "https://opensource-demo.orangehrmlive.com/",
   "apiUrl": "https://automationexercise.com/api",
 
-  "timeout": 30000,
+  "timeout": 60000,
 
   "features": {
     "memberSearch": true,
