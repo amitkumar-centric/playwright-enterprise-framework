@@ -1,35 +1,118 @@
-
-# Dependencies
+# =========================================================
+# Node.js
+# =========================================================
 node_modules/
 
-# Playwright artifacts
-playwright-report/
-test-results/
-blob-report/
-.features-gen/
-playwright/.cache/
-playwright/.auth/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# Allure artifacts
+
+# =========================================================
+# Environment / Secrets
+# NEVER commit credentials
+# =========================================================
+.env
+.env.local
+.env.*.local
+
+# Optional environment-specific secret files
+.env.dev
+.env.qa
+.env.staging
+.env.prod
+
+# Keep template
+!.env.example
+
+
+# =========================================================
+# Playwright
+# =========================================================
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+
+# =========================================================
+# Allure
+# =========================================================
 allure-results/
 allure-report/
 
-# Environment files
-.env
-.env.*
-!.env.example
 
-# Auth state
-auth/states/
-auth/states/*.json
-
-# Logs
+# =========================================================
+# BrowserStack generated files / logs
+# =========================================================
+log/
 logs/
 
-# Generated data
-data/generated/*
-!data/generated/.gitkeep
+playwright-browserstack-sdk.config.ts
 
+.browserstack/
+
+
+# =========================================================
+# Authentication / Storage State
+# These may contain cookies/tokens
+# =========================================================
 auth/states/*.json
-auth/states/
-playwright/.auth/
+
+# Keep folder structure if needed
+!auth/states/.gitkeep
+
+
+# =========================================================
+# Screenshots / Videos / Traces
+# =========================================================
+screenshots/
+videos/
+traces/
+
+*.webm
+*.zip
+
+
+# =========================================================
+# Coverage
+# =========================================================
+coverage/
+.nyc_output/
+
+
+# =========================================================
+# Build output
+# =========================================================
+dist/
+build/
+out/
+
+
+# =========================================================
+# Temporary files
+# =========================================================
+tmp/
+temp/
+*.tmp
+*.temp
+*.log
+
+
+# =========================================================
+# IDE
+# =========================================================
+.vscode/
+.idea/
+
+*.swp
+*.swo
+
+
+# =========================================================
+# OS
+# =========================================================
+.DS_Store
+Thumbs.db
+desktop.ini
