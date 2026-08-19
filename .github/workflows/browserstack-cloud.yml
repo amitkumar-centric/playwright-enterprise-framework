@@ -5,6 +5,8 @@ permissions:
 
 on:
   push:
+    branches:
+      - main
 
   workflow_dispatch:
 
@@ -19,14 +21,7 @@ jobs:
     timeout-minutes: 45
 
     env:
-
       TEST_ENV: qa
-
-      BROWSERSTACK_USERNAME:
-        ${{ secrets.BROWSERSTACK_USERNAME }}
-
-      BROWSERSTACK_ACCESS_KEY:
-        ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
 
     steps:
 
@@ -37,9 +32,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-
           node-version: 20
-
           cache: npm
 
 
@@ -47,11 +40,29 @@ jobs:
         run: npm ci
 
 
-      - name: Prepare BrowserStack SDK Directory
+      - name: BrowserStack Env Setup
+        uses: browserstack/github-actions/setup-env@master
+        with:
+          username: ${{ secrets.BROWSERSTACK_USERNAME }}
+          access-key: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+          build-name: 'BUILD_INFO'
+          project-name: 'Playwright Enterprise Framework'
+
+
+      - name: Verify BrowserStack variables
+        shell: bash
         run: |
-          export BROWSERSTACK_FILES_DIR="$RUNNER_TEMP/browserstack-sdk"
-          mkdir -p "$BROWSERSTACK_FILES_DIR"
-          echo "BROWSERSTACK_FILES_DIR=$BROWSERSTACK_FILES_DIR" >> "$GITHUB_ENV"
+          if [ -z "$BROWSERSTACK_USERNAME" ]; then
+            echo "BROWSERSTACK_USERNAME is missing"
+            exit 1
+          fi
+
+          if [ -z "$BROWSERSTACK_ACCESS_KEY" ]; then
+            echo "BROWSERSTACK_ACCESS_KEY is missing"
+            exit 1
+          fi
+
+          echo "BrowserStack credentials are available"
 
 
       - name: TypeScript validation
@@ -59,42 +70,22 @@ jobs:
 
 
       - name: Run BrowserStack Cloud Tests
-        run: |
-          for attempt in 1 2 3; do
-            npm run test:cloud && exit 0
-
-            if [ "$attempt" -eq 3 ]; then
-              exit 1
-            fi
-
-            echo "BrowserStack bootstrap failed on attempt $attempt. Retrying..."
-            sleep 15
-          done
+        run: npm run test:cloud
 
 
       - name: Upload Playwright Report
         if: always()
-
         uses: actions/upload-artifact@v7
-
         with:
-
           name: browserstack-playwright-report
-
           path: playwright-report/cloud/
-
           retention-days: 14
 
 
-      - name: Upload Test Results
+      - name: Upload BrowserStack SDK Logs
         if: always()
-
         uses: actions/upload-artifact@v7
-
         with:
-
-          name: browserstack-test-results
-
-          path: test-results/
-
-          retention-days: 14
+          name: browserstack-sdk-logs
+          path: log/
+          retention-days: 7
