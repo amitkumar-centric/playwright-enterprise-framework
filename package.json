@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "clean:reports": "powershell -NoProfile -Command \"$ErrorActionPreference='SilentlyContinue'; foreach ($path in @('allure-results','allure-report','playwright-report','test-results')) { if (Test-Path $path) { Remove-Item -Recurse -Force $path } }; exit 0\"",
-    "clean:allure-report": "powershell -NoProfile -Command \"$ErrorActionPreference='SilentlyContinue'; if (Test-Path 'allure-report') { Remove-Item -Recurse -Force 'allure-report' }; exit 0\"",
+    "clean:reports": "node -e \"const fs=require('fs'); ['allure-results','allure-report','playwright-report','test-results'].forEach((path)=>fs.rmSync(path,{recursive:true,force:true}));\"",
+    "clean:allure-report": "node -e \"const fs=require('fs'); fs.rmSync('allure-report',{recursive:true,force:true});\"",
     "test": "npx playwright test",
     "test:framework": "node scripts/run-tests.js",
     "test:framework:fresh": "npm run clean:reports && node scripts/run-tests.js",

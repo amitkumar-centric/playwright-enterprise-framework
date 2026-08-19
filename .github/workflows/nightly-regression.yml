@@ -35,7 +35,7 @@ jobs:
           - 4
 
     env:
-      TEST_ENV: qa
+      TEST_ENV: staging
       SECRET_PROVIDER: env
 
       ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
@@ -64,7 +64,7 @@ jobs:
       - name: Run regression shard
         run: >
           npm run test:framework --
-          --env=qa
+          --env=staging
           --project=${{ matrix.browser }}
           --grep "@regression"
           --grep-invert "@flaky"

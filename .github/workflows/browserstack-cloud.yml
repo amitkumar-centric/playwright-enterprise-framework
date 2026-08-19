@@ -47,12 +47,29 @@ jobs:
         run: npm ci
 
 
+      - name: Prepare BrowserStack SDK Directory
+        run: |
+          export BROWSERSTACK_FILES_DIR="$RUNNER_TEMP/browserstack-sdk"
+          mkdir -p "$BROWSERSTACK_FILES_DIR"
+          echo "BROWSERSTACK_FILES_DIR=$BROWSERSTACK_FILES_DIR" >> "$GITHUB_ENV"
+
+
       - name: TypeScript validation
         run: npx tsc --noEmit
 
 
       - name: Run BrowserStack Cloud Tests
-        run: npm run test:cloud
+        run: |
+          for attempt in 1 2 3; do
+            npm run test:cloud && exit 0
+
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+
+            echo "BrowserStack bootstrap failed on attempt $attempt. Retrying..."
+            sleep 15
+          done
 
 
       - name: Upload Playwright Report
