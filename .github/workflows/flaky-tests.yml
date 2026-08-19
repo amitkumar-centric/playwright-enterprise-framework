@@ -1,5 +1,8 @@
 name: Flaky Test Monitor
 
+permissions:
+  contents: read
+
 on:
   schedule:
     - cron: '0 20 * * *'
@@ -7,30 +10,37 @@ on:
   workflow_dispatch:
 
 jobs:
-
   flaky:
+    name: Flaky Test Validation
 
     runs-on: ubuntu-latest
 
+    timeout-minutes: 45
+
     env:
       TEST_ENV: qa
-      SECRET_PROVIDER: env
 
       ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v6
 
-      - uses: actions/checkout@v6
+      - name: Setup Node
+        uses: actions/setup-node@v6
 
-      - uses: actions/setup-node@v6
         with:
-          node-version: 24
+          node-version: 20
+
           cache: npm
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-      - run: npx playwright install --with-deps
+      - name: Install Playwright
+        run: npx playwright install --with-deps
 
       - name: Run flaky tests
         run: >
@@ -39,12 +49,26 @@ jobs:
           --project=chromium
           --grep "@flaky"
 
-      - name: Upload flaky report
+      - name: Upload Playwright Report
         if: always()
+
         uses: actions/upload-artifact@v7
+
         with:
-          name: flaky-test-report
-          path: |
-            playwright-report/
-            allure-results/
-            test-results/
+          name: flaky-playwright-report
+
+          path: playwright-report/
+
+          retention-days: 30
+
+      - name: Upload Test Results
+        if: always()
+
+        uses: actions/upload-artifact@v7
+
+        with:
+          name: flaky-test-results
+
+          path: test-results/
+
+          retention-days: 30

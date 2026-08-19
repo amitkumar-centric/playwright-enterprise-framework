@@ -1,56 +1,38 @@
-import {
-  defineConfig
-} from '@playwright/test';
+import { defineConfig } from '@playwright/test';
 
-import {
-  config
-} from './config/framework.config';
+import { config } from './config/framework.config';
 
 export default defineConfig({
+  testDir: './tests/cloud',
 
-  testDir:
-    './tests/cloud',
+  testMatch: '**/*.spec.ts',
 
-  testMatch:
-    '**/*.spec.ts',
-
-  timeout:
-    30_000,
+  timeout: 30_000,
 
   expect: {
-    timeout:
-      10_000
+    timeout: 10_000
   },
 
-  fullyParallel:
-    true,
+  fullyParallel: true,
 
   reporter: [
     [
       'html',
       {
-        outputFolder:
-          'playwright-report/cloud',
+        outputFolder: 'playwright-report/cloud',
 
-        open:
-          'never'
+        open: 'never'
       }
     ]
   ],
 
   use: {
+    baseURL: config.baseUrl,
 
-    baseURL:
-      config.baseUrl,
+    screenshot: 'only-on-failure',
 
-    screenshot:
-      'only-on-failure',
+    video: 'off',
 
-    video:
-      'off',
-
-    trace:
-      'off'
+    trace: 'off'
   }
-
 });

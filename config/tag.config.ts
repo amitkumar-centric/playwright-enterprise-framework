@@ -1,5 +1,4 @@
 export const Tags = {
-
   // Test suite
   smoke: '@smoke',
   regression: '@regression',
@@ -18,6 +17,7 @@ export const Tags = {
 
   // Special handling
   flaky: '@flaky',
+  quarantine: '@quarantine',
 
   // Security / performance
   security: '@security',
@@ -26,6 +26,4 @@ export const Tags = {
   cloud: '@cloud',
   crossBrowser: '@cross-browser',
   mobile: '@mobile'
-
-
 } as const;

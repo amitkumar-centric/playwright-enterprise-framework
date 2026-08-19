@@ -1,5 +1,4 @@
 export const executionConfig = {
-
   local: {
     workers: undefined,
     retries: 0,
@@ -11,5 +10,4 @@ export const executionConfig = {
     retries: 2,
     maxFailures: 10
   }
-
 };

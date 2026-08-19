@@ -1,9 +1,6 @@
-import {
-  randomUUID
-} from 'crypto';
+import { randomUUID } from 'crypto';
 
 export class IdHelper {
-
   /**
    * Creates a unique correlation ID
    * for each test execution.
@@ -11,12 +8,9 @@ export class IdHelper {
    * Example:
    * 550e8400-e29b-41d4-a716-446655440000
    */
-  static createCorrelationId():
-    string {
-
+  static createCorrelationId(): string {
     return randomUUID();
   }
-
 
   /**
    * Creates a shorter ID.
@@ -29,11 +23,7 @@ export class IdHelper {
    * Example:
    * a81f29bc
    */
-  static createShortId():
-    string {
-
-    return randomUUID()
-      .replace(/-/g, '')
-      .substring(0, 8);
+  static createShortId(): string {
+    return randomUUID().replace(/-/g, '').substring(0, 8);
   }
 }

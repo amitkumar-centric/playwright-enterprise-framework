@@ -1,6 +1,4 @@
-import {
-  EnvironmentName
-} from './environment.types';
+import { EnvironmentName } from './environment.types';
 
 export interface BrowserConfig {
   headless: boolean;

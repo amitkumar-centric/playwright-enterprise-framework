@@ -1,6 +1,4 @@
 import { SecretManager } from './SecretManager';
 import { createSecretProvider } from './SecretProviderFactory';
 
-export const secrets = new SecretManager(
-  createSecretProvider()
-);
+export const secrets = new SecretManager(createSecretProvider());

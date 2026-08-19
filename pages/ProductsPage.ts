@@ -1,110 +1,51 @@
-import {
-  Page,
-  Locator
-} from '@playwright/test';
-
+import { Page, Locator } from '@playwright/test';
 
 export class ProductsPage {
+  readonly allProductsHeading: Locator;
 
-  readonly allProductsHeading:
-    Locator;
+  readonly searchInput: Locator;
 
-  readonly searchInput:
-    Locator;
+  readonly searchButton: Locator;
 
-  readonly searchButton:
-    Locator;
+  readonly searchedProductsHeading: Locator;
 
-  readonly searchedProductsHeading:
-    Locator;
+  constructor(private readonly page: Page) {
+    this.allProductsHeading = page.getByText('All Products', {
+      exact: true
+    });
 
+    this.searchInput = page.locator('#search_product');
 
-  constructor(
-    private readonly page:
-      Page
-  ) {
+    this.searchButton = page.locator('#submit_search');
 
-    this.allProductsHeading =
-      page.getByText(
-        'All Products',
-        {
-          exact: true
-        }
-      );
-
-
-    this.searchInput =
-      page.locator(
-        '#search_product'
-      );
-
-
-    this.searchButton =
-      page.locator(
-        '#submit_search'
-      );
-
-
-    this.searchedProductsHeading =
-      page.getByText(
-        'Searched Products',
-        {
-          exact: true
-        }
-      );
+    this.searchedProductsHeading = page.getByText('Searched Products', {
+      exact: true
+    });
   }
 
-
-  async goto():
-    Promise<void> {
-
-    await this.page.goto(
-      '/products'
-    );
+  async goto(): Promise<void> {
+    await this.page.goto('/products');
   }
 
+  async searchProduct(productName: string): Promise<void> {
+    await this.searchInput.fill(productName);
 
-  async searchProduct(
-    productName: string
-  ): Promise<void> {
-
-    await this.searchInput
-      .fill(
-        productName
-      );
-
-
-    await this.searchButton
-      .click();
+    await this.searchButton.click();
   }
 
-
-  productName(
-    productName: string
-  ): Locator {
-
+  productName(productName: string): Locator {
     return this.page
-      .getByText(
-        productName,
-        {
-          exact: true
-        }
-      )
+      .getByText(productName, {
+        exact: true
+      })
       .first();
   }
 
-
-  productPrice(
-    price: string
-  ): Locator {
-
+  productPrice(price: string): Locator {
     return this.page
-      .getByText(
-        price,
-        {
-          exact: true
-        }
-      )
+      .getByText(price, {
+        exact: true
+      })
       .first();
   }
 }

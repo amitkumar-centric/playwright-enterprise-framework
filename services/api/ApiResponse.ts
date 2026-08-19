@@ -1,15 +1,9 @@
 export interface ApiResponse<T> {
+  status: number;
 
-  status:
-    number;
+  ok: boolean;
 
-  ok:
-    boolean;
+  data: T | null;
 
-  data:
-    T | null;
-
-  headers:
-    Record<string, string>;
-
+  headers: Record<string, string>;
 }

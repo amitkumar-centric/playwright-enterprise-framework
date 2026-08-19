@@ -3,7 +3,6 @@ import { secrets } from './index';
 export async function validateSecrets(
   requiredSecrets: string[]
 ): Promise<void> {
-
   const missingSecrets: string[] = [];
 
   for (const key of requiredSecrets) {
@@ -16,14 +15,12 @@ export async function validateSecrets(
     } catch {
       throw new Error(
         `Unable to validate secret "${key}". ` +
-        `Check the configured secret provider and authentication.`
+          `Check the configured secret provider and authentication.`
       );
     }
   }
 
   if (missingSecrets.length > 0) {
-    throw new Error(
-      `Missing required secrets: ${missingSecrets.join(', ')}`
-    );
+    throw new Error(`Missing required secrets: ${missingSecrets.join(', ')}`);
   }
 }

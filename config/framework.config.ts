@@ -1,62 +1,39 @@
-import {
-  resolveEnvironment
-} from './environment.config';
+import { resolveEnvironment } from './environment.config';
 
-import {
-  frameworkDefaults
-} from './framework.defaults';
+import { frameworkDefaults } from './framework.defaults';
 
-import {
-  FrameworkConfig
-} from './framework.types';
-
+import { FrameworkConfig } from './framework.types';
 
 function buildFrameworkConfig(): FrameworkConfig {
-
-  const environment =
-    resolveEnvironment();
+  const environment = resolveEnvironment();
 
   return {
+    environment: environment.name,
 
-    environment:
-      environment.name,
+    baseUrl: environment.baseUrl,
 
-    baseUrl:
-      environment.baseUrl,
+    apiUrl: environment.apiUrl,
 
-    apiUrl:
-      environment.apiUrl,
-
-    timeout:
-      environment.timeout,
+    timeout: environment.timeout,
 
     browser: {
-      headless:
-        frameworkDefaults.browser.headless,
+      headless: frameworkDefaults.browser.headless,
 
-      actionTimeout:
-        frameworkDefaults.browser.actionTimeout,
+      actionTimeout: frameworkDefaults.browser.actionTimeout,
 
-      navigationTimeout:
-        frameworkDefaults.browser.navigationTimeout
+      navigationTimeout: frameworkDefaults.browser.navigationTimeout
     },
 
     logging: {
-      level:
-        frameworkDefaults.logging.level
+      level: frameworkDefaults.logging.level
     },
 
     performance: {
-      pageLoadThreshold:
-        frameworkDefaults.performance.pageLoadThreshold,
+      pageLoadThreshold: frameworkDefaults.performance.pageLoadThreshold,
 
-      apiResponseThreshold:
-        frameworkDefaults.performance.apiResponseThreshold
+      apiResponseThreshold: frameworkDefaults.performance.apiResponseThreshold
     }
-
   };
 }
 
-
-export const config =
-  buildFrameworkConfig();
+export const config = buildFrameworkConfig();

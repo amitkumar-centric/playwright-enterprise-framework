@@ -5,19 +5,15 @@ env:
       urls:
         - https://automationexercise.com
 
-
 jobs:
-
   # Discover application pages
   - type: spider
 
     parameters:
       context: automation-exercise
 
-
   # Wait for passive scanner to finish
   - type: passiveScan-wait
-
 
   # Generate HTML report
   - type: report
