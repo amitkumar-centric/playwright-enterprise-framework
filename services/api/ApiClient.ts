@@ -3,165 +3,95 @@ import {
   APIResponse as PlaywrightApiResponse
 } from '@playwright/test';
 
-import {
-  ApiResponse
-} from './ApiResponse';
+import { ApiResponse } from './ApiResponse';
 
 export class ApiClient {
-
-  constructor(
-    private readonly request:
-      APIRequestContext
-  ) {}
+  constructor(private readonly request: APIRequestContext) {}
 
   async get<T>(
     path: string,
-    headers:
-      Record<string, string> = {}
+    headers: Record<string, string> = {}
   ): Promise<ApiResponse<T>> {
+    console.log(`[API] GET ${path}`);
 
-    console.log(
-      `[API] GET ${path}`
-    );
+    const response = await this.request.get(path, {
+      headers
+    });
 
-    const response =
-      await this.request.get(
-        path,
-        {
-          headers
-        }
-      );
+    console.log(`[API] ${response.status()} ${response.url()}`);
 
-    console.log(
-      `[API] ${response.status()} ${response.url()}`
-    );
-
-    return this.parseResponse<T>(
-      response
-    );
+    return this.parseResponse<T>(response);
   }
-
 
   async post<T>(
     path: string,
     data?: unknown,
-    headers:
-      Record<string, string> = {}
+    headers: Record<string, string> = {}
   ): Promise<ApiResponse<T>> {
+    console.log(`[API] POST ${path}`);
 
-    console.log(
-      `[API] POST ${path}`
-    );
+    const response = await this.request.post(path, {
+      data,
+      headers
+    });
 
-    const response =
-      await this.request.post(
-        path,
-        {
-          data,
-          headers
-        }
-      );
+    console.log(`[API] ${response.status()} ${response.url()}`);
 
-    console.log(
-      `[API] ${response.status()} ${response.url()}`
-    );
-
-    return this.parseResponse<T>(
-      response
-    );
+    return this.parseResponse<T>(response);
   }
-
 
   async put<T>(
     path: string,
     data?: unknown,
-    headers:
-      Record<string, string> = {}
+    headers: Record<string, string> = {}
   ): Promise<ApiResponse<T>> {
+    console.log(`[API] PUT ${path}`);
 
-    console.log(
-      `[API] PUT ${path}`
-    );
+    const response = await this.request.put(path, {
+      data,
+      headers
+    });
 
-    const response =
-      await this.request.put(
-        path,
-        {
-          data,
-          headers
-        }
-      );
+    console.log(`[API] ${response.status()} ${response.url()}`);
 
-    console.log(
-      `[API] ${response.status()} ${response.url()}`
-    );
-
-    return this.parseResponse<T>(
-      response
-    );
+    return this.parseResponse<T>(response);
   }
-
 
   async delete<T>(
     path: string,
     data?: unknown,
-    headers:
-      Record<string, string> = {}
+    headers: Record<string, string> = {}
   ): Promise<ApiResponse<T>> {
+    console.log(`[API] DELETE ${path}`);
 
-    console.log(
-      `[API] DELETE ${path}`
-    );
+    const response = await this.request.delete(path, {
+      data,
+      headers
+    });
 
-    const response =
-      await this.request.delete(
-        path,
-        {
-          data,
-          headers
-        }
-      );
+    console.log(`[API] ${response.status()} ${response.url()}`);
 
-    console.log(
-      `[API] ${response.status()} ${response.url()}`
-    );
-
-    return this.parseResponse<T>(
-      response
-    );
+    return this.parseResponse<T>(response);
   }
 
+  private async parseResponse<T>(
+    response: PlaywrightApiResponse
+  ): Promise<ApiResponse<T>> {
+    const status = response.status();
 
-private async parseResponse<T>(
-  response:
-    PlaywrightApiResponse
-): Promise<ApiResponse<T>> {
+    const headers = response.headers();
 
-  const status =
-    response.status();
+    const contentType = headers['content-type'] || '';
 
-  const headers =
-    response.headers();
+    const body = await response.text();
 
-  const contentType =
-    headers['content-type'] || '';
+    let data: T | null = null;
 
-  const body =
-    await response.text();
-
-  let data:
-    T | null = null;
-
-  if (body) {
-
-    try {
-
-      data =
-        JSON.parse(body) as T;
-
-    } catch {
-
-      console.error(`
+    if (body) {
+      try {
+        data = JSON.parse(body) as T;
+      } catch {
+        console.error(`
 [API ERROR]
 Unable to parse response as JSON.
 
@@ -174,21 +104,17 @@ Content-Type: ${contentType}
 Body Preview:
 ${body.substring(0, 300)}
       `);
-
+      }
     }
+
+    return {
+      status,
+
+      ok: response.ok(),
+
+      data,
+
+      headers
+    };
   }
-
-  return {
-
-    status,
-
-    ok:
-      response.ok(),
-
-    data,
-
-    headers
-
-  };
-}
 }

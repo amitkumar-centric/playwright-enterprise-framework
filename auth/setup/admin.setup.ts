@@ -1,65 +1,27 @@
-import {
-  test as setup,
-  expect
-} from '@playwright/test';
+import { test as setup, expect } from '@playwright/test';
 
-import {
-  LoginPage
-} from '../../pages/LoginPage';
+import { LoginPage } from '../../pages/LoginPage';
 
-import {
-  DashboardPage
-} from '../../pages/DashboardPage';
+import { DashboardPage } from '../../pages/DashboardPage';
 
-import {
-  getRoleCredentials
-} from '../../fixtures/role.fixture';
+import { getRoleCredentials } from '../../fixtures/role.fixture';
 
-import {
-  roles
-} from '../../config/role.config';
+import { roles } from '../../config/role.config';
 
+setup('authenticate admin', async ({ page }) => {
+  const credentials = await getRoleCredentials('admin');
 
-setup(
-  'authenticate admin',
-  async ({ page }) => {
+  const loginPage = new LoginPage(page);
 
-    const credentials =
-      await getRoleCredentials(
-        'admin'
-      );
+  const dashboardPage = new DashboardPage(page);
 
+  await loginPage.goto();
 
-    const loginPage =
-      new LoginPage(page);
+  await loginPage.login(credentials.username, credentials.password);
 
+  await expect(dashboardPage.dashboardHeading).toBeVisible();
 
-    const dashboardPage =
-      new DashboardPage(page);
-
-
-    await loginPage.goto();
-
-
-    await loginPage.login(
-      credentials.username,
-      credentials.password
-    );
-
-
-    await expect(
-      dashboardPage.dashboardHeading
-    ).toBeVisible();
-
-
-    await page.context()
-      .storageState({
-
-        path:
-          roles.admin
-            .storageStatePath
-
-      });
-
-  }
-);
+  await page.context().storageState({
+    path: roles.admin.storageStatePath
+  });
+});

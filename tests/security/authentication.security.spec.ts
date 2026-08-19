@@ -1,45 +1,22 @@
-import {
-  test,
-  expect
-} from '../../fixtures/base.fixture';
+import { test, expect } from '../../fixtures/base.fixture';
 
-import {
-  UserFactory
-} from '../../data/factories/UserFactory';
+import { UserFactory } from '../../data/factories/UserFactory';
 
-import {
-  Tags
-} from '../../config/tag.config';
-
+import { Tags } from '../../config/tag.config';
 
 test(
   'invalid credentials are rejected',
   {
-    tag: [
-      Tags.security,
-      Tags.api,
-      Tags.nonProd
-    ]
+    tag: [Tags.security, Tags.api, Tags.nonProd]
   },
-  async ({
-    userService
-  }) => {
+  async ({ userService }) => {
+    const user = UserFactory.create();
 
-    const user =
-      UserFactory.create();
+    const response = await userService.verifyLogin(
+      user.email,
+      'invalid-password'
+    );
 
-
-    const response =
-      await userService
-        .verifyLogin(
-          user.email,
-          'invalid-password'
-        );
-
-
-    expect(
-      response.responseCode
-    ).not.toBe(200);
-
+    expect(response.responseCode).not.toBe(200);
   }
 );

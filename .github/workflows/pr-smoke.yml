@@ -10,9 +10,7 @@ on:
       - master
 
 jobs:
-
   smoke:
-
     name: Smoke Tests
 
     runs-on: ubuntu-latest
@@ -22,18 +20,16 @@ jobs:
     env:
       TEST_ENV: qa
       SECRET_PROVIDER: env
-
+      SELF_HEALING: 'true'
       ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
 
     steps:
-
       # ---------------------------------------------------------
       # 1. Checkout repository
       # ---------------------------------------------------------
       - name: Checkout
         uses: actions/checkout@v6
-
 
       # ---------------------------------------------------------
       # 2. Setup Node.js
@@ -44,13 +40,11 @@ jobs:
           node-version: 24
           cache: npm
 
-
       # ---------------------------------------------------------
       # 3. Install project dependencies
       # ---------------------------------------------------------
       - name: Install dependencies
         run: npm ci
-
 
       # ---------------------------------------------------------
       # 4. Install Playwright browsers and OS dependencies
@@ -58,13 +52,11 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-
       # ---------------------------------------------------------
       # 5. Validate TypeScript
       # ---------------------------------------------------------
       - name: TypeScript Validation
         run: npx tsc --noEmit
-
 
       # ---------------------------------------------------------
       # 6. Run Playwright Smoke Tests
@@ -78,7 +70,6 @@ jobs:
           --grep-invert "@flaky"
           --max-failures=1
 
-
       # ---------------------------------------------------------
       # 7. Check generated Playwright report
       # ---------------------------------------------------------
@@ -87,7 +78,6 @@ jobs:
         run: |
           echo "Checking Playwright report..."
           ls -la playwright-report || true
-
 
       # ---------------------------------------------------------
       # 8. Check Allure raw results
@@ -98,14 +88,12 @@ jobs:
           echo "Checking Allure results..."
           ls -la allure-results || true
 
-
       # ---------------------------------------------------------
       # 9. Remove previous Allure report
       # ---------------------------------------------------------
       - name: Clean Previous Allure Report
         if: always()
         run: rm -rf allure-report
-
 
       # ---------------------------------------------------------
       # 10. Generate Allure 3 Report
@@ -126,7 +114,6 @@ jobs:
 
           fi
 
-
       # ---------------------------------------------------------
       # 11. Upload Playwright HTML Report
       # ---------------------------------------------------------
@@ -138,7 +125,6 @@ jobs:
           path: playwright-report/
           retention-days: 14
           if-no-files-found: warn
-
 
       # ---------------------------------------------------------
       # 12. Upload Allure Report
@@ -152,7 +138,6 @@ jobs:
           retention-days: 14
           if-no-files-found: warn
 
-
       # ---------------------------------------------------------
       # 13. Upload raw Allure Results
       # ---------------------------------------------------------
@@ -164,7 +149,6 @@ jobs:
           path: allure-results/
           retention-days: 14
           if-no-files-found: warn
-
 
       # ---------------------------------------------------------
       # 14. Upload Playwright Test Artifacts

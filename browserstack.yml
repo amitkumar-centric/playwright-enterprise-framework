@@ -4,7 +4,6 @@ accessKey: ${BROWSERSTACK_ACCESS_KEY}
 framework: playwright
 
 platforms:
-
   - os: Windows
     osVersion: 11
     browserName: chrome

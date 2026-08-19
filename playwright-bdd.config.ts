@@ -1,24 +1,15 @@
-import {
-  defineConfig,
-  devices
-} from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
-import {
-  defineBddConfig
-} from 'playwright-bdd';
+import { defineBddConfig } from 'playwright-bdd';
 
-import {
-  config
-} from './config/framework.config';
+import { config } from './config/framework.config';
 
 const testDir = defineBddConfig({
   features: 'features/**/*.feature',
   steps: ['features/steps/**/*.ts']
 });
 
-console.log(
-  `Running BDD tests against: ${config.environment.toUpperCase()}`
-);
+console.log(`Running BDD tests against: ${config.environment.toUpperCase()}`);
 
 export default defineConfig({
   testDir,
@@ -26,10 +17,13 @@ export default defineConfig({
 
   reporter: [
     ['list'],
-    ['html', {
-      outputFolder: 'playwright-report/bdd',
-      open: 'never'
-    }]
+    [
+      'html',
+      {
+        outputFolder: 'playwright-report/bdd',
+        open: 'never'
+      }
+    ]
   ],
 
   use: {

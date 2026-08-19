@@ -1,9 +1,5 @@
 export interface SeedResult<T> {
+  data: T;
 
-  data:
-    T;
-
-  cleanup:
-    () => Promise<void>;
-
+  cleanup: () => Promise<void>;
 }

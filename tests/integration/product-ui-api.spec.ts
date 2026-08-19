@@ -1,154 +1,72 @@
-import {
-  test,
-  expect
-} from '../../fixtures/base.fixture';
+import { test, expect } from '../../fixtures/base.fixture';
 
-import {
-  ErrorHelper
-} from '../../utils';
+import { ErrorHelper } from '../../utils';
 
-import {
-  Tags
-} from '../../config/tag.config';
+import { Tags } from '../../config/tag.config';
 
 import * as allure from 'allure-js-commons';
 
 test.skip(
-  ({
-    browserName
-  }) =>
-    browserName === 'firefox',
+  ({ browserName }) => browserName === 'firefox',
   'Skipped on Firefox because page creation is timing out during setup.'
 );
-
 
 test(
   'product returned by API is visible in UI',
   {
-    tag: [
-      Tags.integration,
-      Tags.api,
-      Tags.prodSafe
-    ]
+    tag: [Tags.integration, Tags.api, Tags.prodSafe]
   },
   async ({
     productService,
     productsPage,
     logger,
-    diagnostics,
+    diagnostics: _diagnostics
   }) => {
+    await allure.epic('E-Commerce');
 
-        await allure.epic(
-      'E-Commerce'
-    );
+    await allure.feature('Product Catalogue');
 
-    await allure.feature(
-      'Product Catalogue'
-    );
+    await allure.story('API and UI Product Validation');
 
-    await allure.story(
-      'API and UI Product Validation'
-    );
+    await allure.severity('critical');
 
-    await allure.severity(
-      'critical'
-    );
+    logger.info('Starting API + UI validation');
 
+    logger.info('Starting API + UI product validation');
 
-    logger.info(
-      'Starting API + UI validation'
-    );
-
-    logger.info(
-      'Starting API + UI product validation'
-    );
-
-    let product:
-      Awaited<
-        ReturnType<typeof productService.getFirstProduct>
-      >;
+    let product: Awaited<ReturnType<typeof productService.getFirstProduct>>;
 
     try {
-
-      product =
-        await test.step(
-          'Fetch a product from the API',
-          async () =>
-            productService
-              .getFirstProduct()
-        );
-
+      product = await test.step('Fetch a product from the API', async () =>
+        productService.getFirstProduct());
     } catch (error) {
-
       throw ErrorHelper.create(
         'Unable to start the product API and UI validation because the product API did not return usable data',
-        ErrorHelper.getMessage(
-          error
-        )
+        ErrorHelper.getMessage(error)
       );
-
     }
 
-
-    logger.info(
-      `Product selected: ${product.name}`
-    );
-
+    logger.info(`Product selected: ${product.name}`);
 
     try {
+      await test.step('Open the Products page and search for the API product', async () => {
+        await productsPage.goto();
 
-      await test.step(
-        'Open the Products page and search for the API product',
-        async () => {
+        await productsPage.searchProduct(product.name);
+      });
 
-          await productsPage.goto();
+      await test.step('Verify the product name and price are visible in the UI', async () => {
+        await expect(productsPage.productName(product.name)).toBeVisible();
 
-          await productsPage
-            .searchProduct(
-              product.name
-            );
-
-        }
-      );
-
-
-      await test.step(
-        'Verify the product name and price are visible in the UI',
-        async () => {
-
-          await expect(
-            productsPage
-              .productName(
-                product.name
-              )
-          ).toBeVisible();
-
-
-          await expect(
-            productsPage
-              .productPrice(
-                product.price
-              )
-          ).toBeVisible();
-
-        }
-      );
-
+        await expect(productsPage.productPrice(product.price)).toBeVisible();
+      });
     } catch (error) {
-
       throw ErrorHelper.create(
         `API returned product "${product.name}", but the UI did not show matching product details`,
-        ErrorHelper.getMessage(
-          error
-        )
+        ErrorHelper.getMessage(error)
       );
-
     }
 
-
-    logger.info(
-      'API and UI product data matched successfully'
-    );
-
+    logger.info('API and UI product data matched successfully');
   }
 );

@@ -8,33 +8,22 @@ export interface EmployeeData {
 }
 
 export class EmployeeFactory {
-
-  static create(
-    overrides: Partial<EmployeeData> = {}
-  ): EmployeeData {
-
-    const uniqueSuffix =
-      faker.string.alphanumeric({
-        length: 6,
-        casing: 'upper'
-      });
+  static create(overrides: Partial<EmployeeData> = {}): EmployeeData {
+    const uniqueSuffix = faker.string.alphanumeric({
+      length: 6,
+      casing: 'upper'
+    });
 
     return {
+      firstName: faker.person.firstName(),
 
-      firstName:
-        faker.person.firstName(),
+      middleName: faker.person.middleName(),
 
-      middleName:
-        faker.person.middleName(),
+      lastName: `${faker.person.lastName()}-${uniqueSuffix}`,
 
-      lastName:
-        `${faker.person.lastName()}-${uniqueSuffix}`,
-
-      employeeId:
-        faker.string.numeric(6),
+      employeeId: faker.string.numeric(6),
 
       ...overrides
-
     };
   }
 }

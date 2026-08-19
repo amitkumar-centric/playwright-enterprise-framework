@@ -1,5 +1,4 @@
 export const frameworkDefaults = {
-
   browser: {
     headless: true,
     actionTimeout: 10000,
@@ -14,5 +13,4 @@ export const frameworkDefaults = {
     pageLoadThreshold: 5000,
     apiResponseThreshold: 2000
   }
-
 };

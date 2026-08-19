@@ -1,12 +1,5 @@
-export {
-  UserFactory
-} from './UserFactory';
+export { UserFactory } from './UserFactory';
 
-export type {
-  UserTestData
-} from './UserFactory';
+export type { UserTestData } from './UserFactory';
 
-
-export {
-  EmployeeFactory
-} from './EmployeeFactory';
+export { EmployeeFactory } from './EmployeeFactory';

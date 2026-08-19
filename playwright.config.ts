@@ -1,209 +1,120 @@
-import {
-  defineConfig,
-  devices
-} from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
-import {
-  config
-} from './config/framework.config';
+import { config } from './config/framework.config';
 
-import {
-  executionConfig
-} from './config/execution.config';
+import { executionConfig } from './config/execution.config';
 
-import {
-  reportingConfig
-} from './config/reporting.config';
+import { reportingConfig } from './config/reporting.config';
 
-import {
-  roles
-} from './config/role.config';
+import { roles } from './config/role.config';
 
+const isCI = Boolean(process.env.CI);
 
-const isCI =
-  Boolean(process.env.CI);
+const isOrangeHrmEnvironment = new URL(config.baseUrl).hostname.includes(
+  'orangehrmlive.com'
+);
 
-const isOrangeHrmEnvironment =
-  new URL(
-    config.baseUrl
-  ).hostname.includes(
-    'orangehrmlive.com'
-  );
-
-const execution =
-  isCI
-    ? executionConfig.ci
-    : executionConfig.local;
-
+const execution = isCI ? executionConfig.ci : executionConfig.local;
 
 export default defineConfig({
+  timeout: config.timeout,
 
-  timeout:
-    config.timeout,
+  testDir: './tests',
 
-  testDir:
-    './tests',
+  fullyParallel: !isOrangeHrmEnvironment,
 
-  fullyParallel:
-    !isOrangeHrmEnvironment,
+  workers: execution.workers ?? (isOrangeHrmEnvironment ? 1 : undefined),
 
-  workers:
-    execution.workers
-    ?? (
-      isOrangeHrmEnvironment
-        ? 1
-        : undefined
-    ),
+  retries: isCI ? 2 : 0,
 
-  retries:
-    execution.retries,
+  failOnFlakyTests: false,
 
-  maxFailures:
-    execution.maxFailures,
-
+  maxFailures: execution.maxFailures,
 
   reporter: [
-
-    [
-      isCI
-        ? 'dot'
-        : 'list'
-    ],
+    [isCI ? 'dot' : 'list'],
 
     [
       'html',
       {
+        outputFolder: reportingConfig.playwrightHtml.outputFolder,
 
-        outputFolder:
-          reportingConfig
-            .playwrightHtml
-            .outputFolder,
-
-        open:
-          'never'
-
+        open: 'never'
       }
     ],
 
     [
       'allure-playwright',
       {
-
-        resultsDir:
-          reportingConfig
-            .allure
-            .resultsDir
-
+        resultsDir: reportingConfig.allure.resultsDir
       }
     ],
 
     [
       'junit',
       {
-
-        outputFile:
-          reportingConfig
-            .junit
-            .outputFile
-
+        outputFile: reportingConfig.junit.outputFile
       }
     ]
-
   ],
 
-
   use: {
+    baseURL: config.baseUrl,
 
-    baseURL:
-      config.baseUrl,
+    actionTimeout: config.browser.actionTimeout,
 
-    actionTimeout:
-      config.browser
-        .actionTimeout,
+    navigationTimeout: config.browser.navigationTimeout,
 
-    navigationTimeout:
-      config.browser
-        .navigationTimeout,
+    screenshot: 'only-on-failure',
 
-    screenshot:
-      'only-on-failure',
+    video: 'retain-on-failure',
 
-    video:
-      'retain-on-failure',
-
-    trace:
-      'on-first-retry'
-
+    trace: 'on-first-retry'
   },
 
-
   projects: [
-
     // ---------------------------------
     // Authentication setup
     // ---------------------------------
 
     {
-      name:
-        'admin-setup',
+      name: 'admin-setup',
 
-      testMatch:
-        /.*auth\.setup\.ts/
+      testMatch: /.*auth\.setup\.ts/
     },
-
 
     // ---------------------------------
     // Chromium
     // ---------------------------------
 
     {
-      name:
-        'chromium',
+      name: 'chromium',
 
-      dependencies: [
-        'admin-setup'
-      ],
+      dependencies: ['admin-setup'],
 
       use: {
+        ...devices['Desktop Chrome'],
 
-        ...devices[
-          'Desktop Chrome'
-        ],
-
-        storageState:
-          roles.admin
-            .storageStatePath
-
+        storageState: roles.admin.storageStatePath
       }
-
     },
-
 
     // ---------------------------------
     // Firefox
     // ---------------------------------
 
     {
-      name:
-        'firefox',
+      name: 'firefox',
 
-      dependencies: [
-        'admin-setup'
-      ],
+      dependencies: ['admin-setup'],
 
-      timeout:
-        60_000,
+      timeout: 60_000,
 
       use: {
-
-        ...devices[
-          'Desktop Firefox'
-        ],
+        ...devices['Desktop Firefox'],
 
         launchOptions: {
-
-          timeout:
-            60_000,
+          timeout: 60_000,
 
           env: {
             ...process.env,
@@ -217,44 +128,26 @@ export default defineConfig({
             'layers.acceleration.disabled': true,
             'gfx.canvas.accelerated': false
           }
-
         },
 
-        storageState:
-          roles.admin
-            .storageStatePath
-
+        storageState: roles.admin.storageStatePath
       }
-
     },
-
 
     // ---------------------------------
     // WebKit
     // ---------------------------------
 
     {
-      name:
-        'webkit',
+      name: 'webkit',
 
-      dependencies: [
-        'admin-setup'
-      ],
+      dependencies: ['admin-setup'],
 
       use: {
+        ...devices['Desktop Safari'],
 
-        ...devices[
-          'Desktop Safari'
-        ],
-
-        storageState:
-          roles.admin
-            .storageStatePath
-
+        storageState: roles.admin.storageStatePath
       }
-
     }
-
   ]
-
 });

@@ -1,42 +1,19 @@
-import {
-  test as base,
-  Page
-} from '@playwright/test';
+import { test as base, Page } from '@playwright/test';
 
-import {
-  DashboardPage
-} from '../pages/DashboardPage';
-
+import { DashboardPage } from '../pages/DashboardPage';
 
 type AuthFixtures = {
+  adminPage: Page;
 
-  adminPage:
-    Page;
-
-  adminDashboard:
-    DashboardPage;
-
+  adminDashboard: DashboardPage;
 };
 
+export const authTest = base.extend<AuthFixtures>({
+  adminPage: async ({ page }, use) => {
+    await use(page);
+  },
 
-export const authTest =
-  base.extend<AuthFixtures>({
-
-    adminPage:
-      async ({ page }, use) => {
-
-        await use(page);
-
-      },
-
-
-    adminDashboard:
-      async ({ page }, use) => {
-
-        await use(
-          new DashboardPage(page)
-        );
-
-      }
-
-  });
+  adminDashboard: async ({ page }, use) => {
+    await use(new DashboardPage(page));
+  }
+});

@@ -1,19 +1,11 @@
 export interface VerifyLoginResponse {
+  responseCode: number;
 
-  responseCode:
-    number;
-
-  message:
-    string;
-
+  message: string;
 }
 
 export interface AccountMutationResponse {
+  responseCode: number;
 
-  responseCode:
-    number;
-
-  message:
-    string;
-
+  message: string;
 }

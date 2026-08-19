@@ -4,14 +4,10 @@ permissions:
   contents: read
 
 on:
-  push:
-
   workflow_dispatch:
 
 jobs:
-
   browserstack:
-
     name: Playwright BrowserStack
 
     runs-on: ubuntu-latest
@@ -22,10 +18,8 @@ jobs:
       TEST_ENV: qa
 
     steps:
-
       - name: Checkout
         uses: actions/checkout@v6
-
 
       - name: Setup Node
         uses: actions/setup-node@v6
@@ -33,10 +27,8 @@ jobs:
           node-version: 20
           cache: npm
 
-
       - name: Install dependencies
         run: npm ci
-
 
       - name: BrowserStack Env Setup
         uses: browserstack/github-actions/setup-env@master
@@ -45,7 +37,6 @@ jobs:
           access-key: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
           build-name: 'BUILD_INFO'
           project-name: 'Playwright Enterprise Framework'
-
 
       - name: Verify BrowserStack variables
         shell: bash
@@ -62,14 +53,11 @@ jobs:
 
           echo "BrowserStack credentials are available"
 
-
       - name: TypeScript validation
         run: npx tsc --noEmit
 
-
       - name: Run BrowserStack Cloud Tests
         run: npm run test:cloud
-
 
       - name: Upload Playwright Report
         if: always()
@@ -78,7 +66,6 @@ jobs:
           name: browserstack-playwright-report
           path: playwright-report/cloud/
           retention-days: 14
-
 
       - name: Upload BrowserStack SDK Logs
         if: always()
