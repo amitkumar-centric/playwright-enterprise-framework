@@ -15,11 +15,6 @@ platforms:
     browserName: edge
     browserVersion: latest
 
-  - os: OS X
-    osVersion: Sonoma
-    browserName: safari
-    browserVersion: latest
-
 parallelsPerPlatform: 1
 
 projectName: Playwright Enterprise Framework
