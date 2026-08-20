@@ -4,6 +4,8 @@ import { defineBddConfig } from 'playwright-bdd';
 
 import { config } from './config/framework.config';
 
+import { reportingConfig } from './config/reporting.config';
+
 const testDir = defineBddConfig({
   features: 'features/**/*.feature',
   steps: ['features/steps/**/*.ts']
@@ -22,6 +24,12 @@ export default defineConfig({
       {
         outputFolder: 'playwright-report/bdd',
         open: 'never'
+      }
+    ],
+    [
+      'allure-playwright',
+      {
+        resultsDir: reportingConfig.allure.resultsDir
       }
     ]
   ],

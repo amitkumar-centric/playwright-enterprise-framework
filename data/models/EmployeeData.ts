@@ -7,3 +7,5 @@ export interface EmployeeData {
 
   employeeId?: string;
 }
+
+export type EmployeeDataVersion = 'v1' | 'v2';
