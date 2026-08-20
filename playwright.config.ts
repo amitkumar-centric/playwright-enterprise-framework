@@ -149,7 +149,9 @@ export default defineConfig({
         storageState: roles.admin.storageStatePath
       }
     },
-
+  // ==============================
+  // Mobile Chrome Emulation
+  // ==============================
     {
       name: 'mobile-chrome',
 
@@ -157,7 +159,9 @@ export default defineConfig({
         ...devices['Pixel 7']
       }
     },
-
+  // ==============================
+  // Mobile Safari Emulation
+  // ==============================
     {
       name: 'mobile-safari',
 

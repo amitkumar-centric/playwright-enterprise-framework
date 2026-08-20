@@ -1,20 +1,44 @@
-import { SecretProvider } from './SecretProvider';
+import {
+  SecretProvider
+} from './SecretProvider';
 
-import { EnvSecretProvider } from './EnvSecretProvider';
+import {
+  EnvSecretProvider
+} from './EnvSecretProvider';
 
-import { AzureKeyVaultSecretProvider } from './AzureKeyVaultSecretProvider';
+import {
+  AzureKeyVaultSecretProvider
+} from './AzureKeyVaultSecretProvider';
 
-export function createSecretProvider(): SecretProvider {
-  const provider = process.env.SECRET_PROVIDER || 'env';
 
-  switch (provider) {
-    case 'env':
-      return new EnvSecretProvider();
+export class SecretProviderFactory {
 
-    case 'azure-key-vault':
-      return new AzureKeyVaultSecretProvider();
+  static create():
+    SecretProvider {
 
-    default:
-      throw new Error(`Unsupported secret provider: ${provider}`);
+    const provider =
+      process.env.SECRET_PROVIDER
+        ?.toLowerCase()
+        ?? 'env';
+
+
+    switch (provider) {
+
+      case 'azure':
+
+        return new AzureKeyVaultSecretProvider();
+
+
+      case 'env':
+
+        return new EnvSecretProvider();
+
+
+      default:
+
+        throw new Error(
+          `Unsupported secret provider: ${provider}`
+        );
+    }
   }
 }

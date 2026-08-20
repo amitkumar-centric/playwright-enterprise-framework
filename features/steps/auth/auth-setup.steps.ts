@@ -4,6 +4,8 @@ import { createBdd } from 'playwright-bdd';
 
 import { test } from 'playwright-bdd';
 
+import { config } from '../../../config/framework.config';
+
 import { getRoleCredentials } from '../../../fixtures/role.fixture';
 
 import { DashboardPage } from '../../../pages/DashboardPage';
@@ -14,10 +16,19 @@ import { ErrorHelper } from '../../../utils';
 
 const { Given, When, Then } = createBdd(test);
 
+const isOrangeHrm = new URL(config.baseUrl).hostname.includes(
+  'orangehrmlive.com'
+);
+
 Given('the admin login page is opened', async ({ page }) => {
   const loginPage = new LoginPage(page);
 
   try {
+    if (isOrangeHrm) {
+      await loginPage.gotoOrangeHrm();
+      return;
+    }
+
     await loginPage.goto();
   } catch (error) {
     throw ErrorHelper.create(
@@ -35,6 +46,14 @@ When(
     const loginPage = new LoginPage(page);
 
     try {
+      if (isOrangeHrm) {
+        await loginPage.loginToOrangeHrm(
+          credentials.username,
+          credentials.password
+        );
+        return;
+      }
+
       await loginPage.login(
         credentials.username,
         credentials.password
@@ -52,6 +71,13 @@ Then('the admin dashboard is displayed', async ({ page }) => {
   const dashboardPage = new DashboardPage(page);
 
   try {
+    if (isOrangeHrm) {
+      await expect(page).toHaveURL(
+        /orangehrmlive\.com\/web\/index\.php\/dashboard/
+      );
+      return;
+    }
+
     await expect(
       dashboardPage.dashboardHeading
     ).toBeVisible();

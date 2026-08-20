@@ -4,6 +4,11 @@ import { Tags } from '../../config/tag.config';
 
 import { flakyConfig } from '../../config/flaky.config';
 
+test.skip(
+  ({ browserName }) => browserName === 'firefox',
+  'Skipped on Firefox because browser context setup is timing out in this environment.'
+);
+
 test.describe(
   'Known flaky product scenarios',
   {

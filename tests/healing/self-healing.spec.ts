@@ -12,6 +12,8 @@ test(
   async ({ page, logger }) => {
     logger.info('Starting self-healing locator POC');
 
+    process.env.SELF_HEALING = 'true';
+
     await page.goto(
       'https://opensource-demo.orangehrmlive.com/web/index.php/auth/login'
     );

@@ -25,5 +25,6 @@ export const Tags = {
 
   cloud: '@cloud',
   crossBrowser: '@cross-browser',
-  mobile: '@mobile'
+  mobile: '@mobile',
+   responsive: '@responsive',
 } as const;
