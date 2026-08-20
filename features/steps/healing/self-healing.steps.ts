@@ -14,6 +14,8 @@ Given(
   'the user opens the OrangeHRM login page for self-healing validation',
   async ({ page }) => {
     try {
+      process.env.SELF_HEALING = 'true';
+
       await page.goto(
         'https://opensource-demo.orangehrmlive.com/web/index.php/auth/login'
       );
