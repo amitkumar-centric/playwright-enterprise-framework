@@ -42,3 +42,9 @@ export class SecretProviderFactory {
     }
   }
 }
+
+export function createSecretProvider():
+  SecretProvider {
+
+  return SecretProviderFactory.create();
+}
