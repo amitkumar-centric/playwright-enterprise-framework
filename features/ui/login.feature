@@ -1,3 +1,4 @@
+@smoke @ui
 Feature: Login page
   As a test user
   I want to open the application entry page

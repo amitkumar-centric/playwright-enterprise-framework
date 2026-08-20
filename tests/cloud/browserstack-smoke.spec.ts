@@ -2,6 +2,8 @@ import { test, expect } from '../../fixtures/base.fixture';
 
 import { Tags } from '../../config/tag.config';
 
+import { ErrorHelper } from '../../utils';
+
 test(
   'Automation Exercise products page works on BrowserStack',
   {
@@ -10,9 +12,16 @@ test(
   async ({ productsPage, logger, diagnostics: _diagnostics }) => {
     logger.info('Starting BrowserStack cloud smoke test');
 
-    await productsPage.goto();
+    try {
+      await productsPage.goto();
 
-    await expect(productsPage.allProductsHeading).toBeVisible();
+      await expect(productsPage.allProductsHeading).toBeVisible();
+    } catch (error) {
+      throw ErrorHelper.create(
+        'BrowserStack smoke validation failed because the products page did not load correctly',
+        ErrorHelper.getMessage(error)
+      );
+    }
 
     logger.info('Products page successfully validated');
   }

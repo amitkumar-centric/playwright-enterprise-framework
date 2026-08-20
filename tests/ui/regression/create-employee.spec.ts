@@ -6,6 +6,8 @@ import { Tags } from '../../../config/tag.config';
 
 import { EmployeeFactory } from '../../../data/factories/EmployeeFactory';
 
+import { ErrorHelper } from '../../../utils';
+
 const isOrangeHrm = new URL(config.baseUrl).hostname.includes(
   'orangehrmlive.com'
 );
@@ -21,38 +23,46 @@ test(
     tag: [Tags.regression, Tags.critical, Tags.ui, Tags.nonProd]
   },
   async ({ page, loginPage, adminCredentials, pimPage }) => {
-    const employee = EmployeeFactory.create();
+    const employee = EmployeeFactory.createVersion('v1');
 
-    if (isOrangeHrm) {
-      await loginPage.gotoOrangeHrm();
+    try {
+      if (isOrangeHrm) {
+        await loginPage.gotoOrangeHrm();
 
-      await loginPage.loginToOrangeHrm(
-        adminCredentials.username,
-        adminCredentials.password
+        await loginPage.loginToOrangeHrm(
+          adminCredentials.username,
+          adminCredentials.password
+        );
+
+        await expect(
+          page.getByRole('link', {
+            name: 'Dashboard'
+          })
+        ).toBeVisible();
+      } else {
+        await loginPage.goto();
+
+        await loginPage.login(
+          adminCredentials.username,
+          adminCredentials.password
+        );
+      }
+
+      await pimPage.goto();
+
+      await pimPage.openAddEmployee();
+
+      await pimPage.createEmployee(
+        employee.firstName,
+        employee.lastName,
+        employee.middleName,
+        employee.employeeId
       );
-
-      await expect(
-        page.getByRole('link', {
-          name: 'Dashboard'
-        })
-      ).toBeVisible();
-    } else {
-      await loginPage.goto();
-
-      await loginPage.login(
-        adminCredentials.username,
-        adminCredentials.password
+    } catch (error) {
+      throw ErrorHelper.create(
+        'Admin could not create a new employee from the regression flow',
+        `Employee data version: v1. Employee: ${employee.firstName} ${employee.lastName}. Current URL: ${page.url()}. ${ErrorHelper.getMessage(error)}`
       );
     }
-
-    await pimPage.goto();
-
-    await pimPage.openAddEmployee();
-
-    await pimPage.createEmployee(
-      employee.firstName,
-      employee.lastName,
-      employee.middleName
-    );
   }
 );

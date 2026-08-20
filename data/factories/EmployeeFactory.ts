@@ -1,11 +1,22 @@
 import { faker } from '@faker-js/faker';
 
-export interface EmployeeData {
-  firstName: string;
-  middleName?: string;
-  lastName: string;
-  employeeId: string;
-}
+import { EmployeeData, EmployeeDataVersion } from '../models/EmployeeData';
+
+const employeeVersionPresets: Record<
+  EmployeeDataVersion,
+  Omit<EmployeeData, 'employeeId'>
+> = {
+  v1: {
+    firstName: 'Amit',
+    middleName: 'Kumar',
+    lastName: 'VersionOne'
+  },
+  v2: {
+    firstName: 'Priya',
+    middleName: 'Sharma',
+    lastName: 'VersionTwo'
+  }
+};
 
 export class EmployeeFactory {
   static create(overrides: Partial<EmployeeData> = {}): EmployeeData {
@@ -25,5 +36,18 @@ export class EmployeeFactory {
 
       ...overrides
     };
+  }
+
+  static createVersion(
+    version: EmployeeDataVersion,
+    overrides: Partial<EmployeeData> = {}
+  ): EmployeeData {
+    const preset = employeeVersionPresets[version];
+
+    return EmployeeFactory.create({
+      ...preset,
+      lastName: `${preset.lastName}-${version.toUpperCase()}`,
+      ...overrides
+    });
   }
 }
